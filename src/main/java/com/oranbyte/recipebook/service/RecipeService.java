@@ -1,0 +1,25 @@
+package com.oranbyte.recipebook.service;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.oranbyte.recipebook.dto.RecipeDto;
+import com.oranbyte.recipebook.entity.Recipe;
+import com.oranbyte.recipebook.entity.User;
+
+public interface RecipeService {
+
+	Recipe saveRecipe(Recipe recipe);
+	
+	Recipe convertToEntity(RecipeDto dto, User user);
+	
+	List<RecipeDto> getLast20Recipes(); 
+	
+	Page<RecipeDto> getAllRecipes(Pageable pageable);
+	
+	Page<RecipeDto> recentRecipes(Pageable pageable);
+
+	
+}

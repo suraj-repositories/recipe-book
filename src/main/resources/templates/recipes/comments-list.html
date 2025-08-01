@@ -1,0 +1,24 @@
+<th:block th:each="comment : ${comments}">
+	
+
+	<div class="media d-block d-sm-flex mb-4 pb-4">
+		<a class="d-inline-block mr-2 mb-3 mb-md-0" href="#">
+			<img src="/images/john-doe.jpg" style="width: 50px; height: 50px;" class="mr-3 rounded-circle" alt="">
+		</a>
+		<div class="media-body">
+			<a href="#!" class="h4 d-inline-block mb-3" th:text="${comment.user.name}">User Name</a>
+			
+				<p th:text="${comment.message}">Comment content</p>
+			
+				<span class="text-black-800 mr-3 font-weight-600"
+				      th:text="${#temporals.format(comment.createdAt, 'MMMM d, yyyy ''at'' h:mm a')}">
+				    July 23, 2025 at 4:00 AM
+				</span>
+
+			<a class="text-primary font-weight-600" href="#!">Reply</a>
+		</div>
+	</div>
+</th:block>
+<div th:if="${#lists.isEmpty(comments)}">
+    <p class="text-muted">No comments available.</p>
+</div>

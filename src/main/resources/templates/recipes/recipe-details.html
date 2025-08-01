@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-us" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{/layouts/header :: header}"></th:block>
+<section class="section">
+	<div class="container pt-4">
+		<div class="row">
+			<div class=" col-lg-8 mb-5 mb-lg-0">
+				<article>
+					<div class="post-slider mb-4">
+
+						<img th:each="image : ${recipe.imagesDtos}" th:src="${image.imagePath}" class="card-img"
+							alt="post-thumb">
+					</div>
+					<h1 class="h2" th:text="${recipe.title}">Recipe Title</h1>
+					<ul class="card-meta my-3 list-inline">
+						<li class="list-inline-item">
+							<a href="author-single.html" class="card-meta-author">
+								<img src="/images/john-doe.jpg" alt="John Doe">
+								<span th:text="${recipe.userName}">John Doe</span>
+							</a>
+						</li>
+						<li class="list-inline-item">
+							<i class="ti-timer"></i><span
+								th:text="${recipe.prepTime + recipe.cookTime} + ' Min To Serve'">0 Min To Serve</span>
+						</li>
+						<li class="list-inline-item">
+							<i class="ti-calendar"></i><th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
+						</li>
+						<li class="list-inline-item">
+							<span th:text="${recipe.difficulty}">Easy</span>
+
+						</li>
+						<li class="list-inline-item">
+							<ul class="card-meta-tag list-inline">
+								<li class="list-inline-item">
+									<a th:href="@{'/categories/' + ${recipe.categoryId}}"
+										th:text="${recipe.categoryName}">Category</a>
+								</li>
+							</ul>
+						</li>
+
+					</ul>
+					<div class="content">
+						<p th:text="${recipe.description}"></p>
+						<h4 id="heading-example">Instructions</h4>
+
+						<th:block th:utext="${recipe.instructions}"></th:block>
+					</div>
+				</article>
+				<div class="mt-5">
+					<div class="mb-5 border-top mt-4 pt-5">
+						<h3 class="mb-4">Comments</h3>
+
+						<div id="commentSection" th:data-recipe-id="${recipe.id}"></div>
+
+						<button id="loadMoreBtn" class="btn btn-primary mb-4">Load More</button>
+
+
+						<!--
+						<div class="media d-block d-sm-flex mb-4 pb-4">
+							<a class="d-inline-block mr-2 mb-3 mb-md-0" href="#">
+								<img src="images/post/user-01.jpg" class="mr-3 rounded-circle" alt="">
+							</a>
+							<div class="media-body">
+								<a href="#!" class="h4 d-inline-block mb-3">Alexender Grahambel</a>
+								<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+									sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+									Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in
+									faucibus.</p>
+								<span class="text-black-800 mr-3 font-weight-600">April 18, 2020 at 6.25 pm</span>
+								<a class="text-primary font-weight-600" href="#!">Reply</a>
+							</div>
+						</div>
+						<div class="media d-block d-sm-flex">
+							<div class="d-inline-block mr-2 mb-3 mb-md-0" href="#">
+								<img class="mr-3" src="images/post/arrow.png" alt="">
+								<a href="#!"><img src="images/post/user-02.jpg" class="mr-3 rounded-circle" alt=""></a>
+							</div>
+							<div class="media-body">
+								<a href="#!" class="h4 d-inline-block mb-3">Nadia Sultana Tisa</a>
+								<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+									sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
+									Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in
+									faucibus.</p>
+								<span class="text-black-800 mr-3 font-weight-600">April 18, 2020 at 6.25 pm</span>
+								<a class="text-primary font-weight-600" href="#!">Reply</a>
+							</div>
+					</div>
+						</div>
+					<div>
+					-->
+
+
+						<h3 class="mb-4">Leave a Reply</h3>
+						<form th:action="@{/recipe/comment}" th:object="${comment_dto}" id="commentForm" method="POST">
+							<div class="alert alert-dismissible fade no-extra-space" role="alert" id="flashMessage">
+							</div>
+
+							<div class="row">
+								<input type="hidden" th:field="*{recipeId}" />
+
+								<div class="form-group col-md-12">
+									<textarea class="form-control shadow-none" th:field="*{message}" rows="7"
+										required></textarea>
+								</div>
+							</div>
+							<button class="btn btn-primary" type="submit">Comment Now</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<aside class="col-lg-4">
+
+
+				<!-- about me -->
+				<div class="widget widget-about">
+					<h4 class="widget-title" th:text="'Hi, I am ' + ${user.name} + '!'">Hi, I am Steve!</h4>
+					<img class="img-fluid" th:src="${user.image}" alt="Creator Pic">
+					<p th:text="${user_detail.bio}">Something about me</p>
+					<ul class="list-inline social-icons mb-3">
+						<li class="list-inline-item" th:each="social_link : ${user_social_links}">
+							<a th:href="${social_link.url}" target="_blank" rel="noopener noreferrer">
+								<i th:class="${'ti-' + social_link.platformName.toLowerCase()}"></i>
+							</a>
+						</li>
+
+					</ul>
+					<a href="about-me.html" class="btn btn-primary mb-2">About me</a>
+				</div>
+				<!-- Promotion -->
+				<div class="promotion">
+					<img src="/images/promotion.jpg" class="img-fluid w-100">
+					<div class="promotion-content">
+						<h5 class="text-white mb-3">Create Your Stories!!</h5>
+						<p class="text-white mb-4">"Experimenting with flavors and finding my inner chef. It's a
+							delicious journey, one dish at a time."</p>
+						<a th:href="${isAuthenticated ? '/recipes/create' : '/login'}" class="btn btn-primary">Get
+							Started</a>
+					</div>
+				</div>
+
+				<!-- authors -->
+				<div class="widget widget-author">
+					<h4 class="widget-title">Authors</h4>
+					<th:block th:each="author : ${authors}">
+						<div class="media align-items-center">
+							<div class="mr-3">
+								<img class="widget-author-image" th:src="${author.image}">
+							</div>
+							<div class="media-body">
+								<h5 class="mb-1"><a class="post-title" href="author-single.html"><span
+											th:text="${author.name}"></span></a></h5>
+								<span th:text="${author.bio != null && #strings.length(author.bio) > 40 
+							                ? author.bio.substring(0, 30) + '...' 
+							                : author.email}"></span>
+
+							</div>
+						</div>
+					</th:block>
+
+				</div>
+				<!-- Search -->
+
+				<div class="widget">
+					<h4 class="widget-title"><span>Never Miss A News</span></h4>
+					<form action="#!" method="post" name="mc-embedded-subscribe-form" target="_blank"
+						class="widget-search">
+						<input class="mb-3" id="search-query" name="s" type="search" placeholder="Your Email Address">
+						<i class="ti-email"></i>
+						<button type="submit" class="btn btn-primary btn-block" name="subscribe">Subscribe now</button>
+						<div style="position: absolute; left: -5000px;" aria-hidden="true">
+							<input type="text" name="b_463ee871f45d2d93748e77cad_a0a2c6d074" tabindex="-1">
+						</div>
+					</form>
+				</div>
+
+				<!-- categories -->
+				<div class="widget widget-categories">
+					<h4 class="widget-title"><span>Categories</span></h4>
+					<ul class="list-unstyled widget-list">
+						<li><a href="tags.html" class="d-flex">Creativity <small class="ml-auto">(4)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Demo <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Elements <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Food <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Microwave <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Natural <small class="ml-auto">(3)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Newyork city <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Nice <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Tech <small class="ml-auto">(2)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Videography <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Vlog <small class="ml-auto">(1)</small></a></li>
+						<li><a href="tags.html" class="d-flex">Wondarland <small class="ml-auto">(1)</small></a></li>
+					</ul>
+				</div><!-- tags -->
+				<div class="widget">
+					<h4 class="widget-title"><span>Tags</span></h4>
+					<ul class="list-inline widget-list-inline widget-card">
+						<li th:each="tag : ${tags}" class="list-inline-item">
+						    <a th:href="@{/tags/{id}(id=${tag.id})}" th:text="${tag.name}"></a>
+						</li>
+					</ul>
+				</div><!-- recent post -->
+				<div class="widget">
+					<h4 class="widget-title">Recent Post</h4>
+
+					<!-- post-item -->
+					<article th:each="recipe : ${recent_recipies}" class="widget-card">
+						<div class="d-flex">
+							<img class="card-img-sm" th:src="${recipe.primaryImage}">
+							<div class="ml-3">
+								<h5><a class="post-title" th:href="@{'/recipes/' + ${recipe.id}}" th:text="${recipe.title}"></a></h5>
+								<ul class="card-meta list-inline mb-0">
+									<li class="list-inline-item mb-0">
+										<i class="ti-calendar"></i><th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
+
+									</li>
+								</ul>
+							</div>
+						</div>
+					</article>
+
+				</div>
+
+				<!-- Social -->
+				<div class="widget">
+					<h4 class="widget-title"><span>Social Links</span></h4>
+					<ul class="list-inline widget-social">
+						<li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
+						<li class="list-inline-item"><a href="#"><i class="ti-linkedin"></i></a></li>
+						<li class="list-inline-item"><a href="#"><i class="ti-github"></i></a></li>
+						<li class="list-inline-item"><a href="#"><i class="ti-youtube"></i></a></li>
+					</ul>
+				</div>
+			</aside>
+		</div>
+</section>
+
+<script th:src="@{/js/pages/comment.js}"></script>
+<th:block th:replace="~{/layouts/footer :: footer}"></th:block>
