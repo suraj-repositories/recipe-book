@@ -1,5 +1,8 @@
 package com.oranbyte.recipebook.controller;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.oranbyte.recipebook.dto.CategoryDto;
 import com.oranbyte.recipebook.dto.CommentDto;
 import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.Recipe;
@@ -47,45 +51,59 @@ public class RecipeController {
 
 	@Autowired
 	private RecipeImageService recipeImageService;
-	
+
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private TagService tagService;
-	
+
 	@Autowired
 	private IngredientService ingredientService;
-	
+
 	@Autowired
 	private UnitService unitService;
-	
+
 	@Autowired
 	private UserDetailService userDetailService;
-	
+
 	@Autowired
 	private UserSocialLinksService userSocialLinksService;
-	
 
 	@GetMapping
-	public String index(@RequestParam(defaultValue = "0") int page,
-	                    @RequestParam(defaultValue = "15") int size,
-	                    Model model) {
-	    
-		 Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		 Page<RecipeDto> recipePage = recipeService.getAllRecipes(pageable);
+	public String index(
+			@RequestParam(defaultValue = "0") int page, 
+			@RequestParam(defaultValue = "15") int size,
+			@RequestParam(required = false) Long categoryId, 
+			@RequestParam(required = false) Long tagId,
+			@RequestParam(required = false) String title, 
+			@RequestParam(required = false) String difficulty,
+			Model model) {
 
-	    model.addAttribute("recipes", recipePage.getContent());
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", recipePage.getTotalPages());
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<RecipeDto> recipePage = recipeService.searchRecipes(categoryId, tagId, title, difficulty, pageable);
+
+		model.addAttribute("recipes", recipePage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", recipePage.getTotalPages());
+		model.addAttribute("tagId", tagId);
+		model.addAttribute("title", title);
+		model.addAttribute("difficulty", difficulty);
+
+		 List<CategoryDto> categories = categoryService.getAllCategories();
+		 CategoryDto currentCategory = categories.stream().filter(category-> category.getId().equals(categoryId))
+				 .findFirst().orElse(null);
 		
-		
+		model.addAttribute("categoryId", categoryId);
+		model.addAttribute("category", currentCategory);
+		model.addAttribute("categories", categories);
+
 		return "recipes/recipes";
 	}
 
@@ -94,50 +112,52 @@ public class RecipeController {
 		model.addAttribute("units", unitService.getAll());
 		model.addAttribute("categories", categoryService.getAllCategories());
 		model.addAttribute("recipeDto", new RecipeDto());
-		
+
 		return "recipes/create-recipe";
 	}
 
 	@PostMapping("/save")
-    public String saveRecipe(@ModelAttribute RecipeDto recipeDto,
-                             @RequestParam(value = "images" , required = false) MultipartFile[] images,
-                             @RequestParam(value = "tags", required =  false) String[] tags,
-                             @RequestParam(value = "ingredient_names", required = false) String[] ingredientNames,
-                             @RequestParam(value = "ingredient_quantities", required = false) Integer[] ingredientQuantities,
-                             @RequestParam(value = "ingredient_units", required = false) Long[] ingredientUnitIds,
-                             @RequestParam(value = "ingredient_notes", required = false) String[] ingredientNotes,
-                             RedirectAttributes redirectAttr,
-                             HttpServletRequest request) {
+	public String saveRecipe(@ModelAttribute RecipeDto recipeDto,
+			@RequestParam(value = "images", required = false) MultipartFile[] images,
+			@RequestParam(value = "tags", required = false) String[] tags,
+			@RequestParam(value = "ingredient_names", required = false) String[] ingredientNames,
+			@RequestParam(value = "ingredient_quantities", required = false) Integer[] ingredientQuantities,
+			@RequestParam(value = "ingredient_units", required = false) Long[] ingredientUnitIds,
+			@RequestParam(value = "ingredient_notes", required = false) String[] ingredientNotes,
+			RedirectAttributes redirectAttr, Principal principal, HttpServletRequest request) {
 
-        try {
-            User user = userRepository.findByEmail("admin@gmail.com");
-            Recipe recipe = recipeService.convertToEntity(recipeDto, user);
-            
-            if(tags.length > 0) {
-            	Set<Tag> savedTags = tagService.saveAll(tags);
-            	recipe.setTags(savedTags);            	
-            }
-            
-            Recipe savedRecipe = recipeService.saveRecipe(recipe);
-            
-            if(ingredientNames.length > 0) {
-            	ingredientService.saveRecipeIngredients(savedRecipe, ingredientNames, ingredientQuantities, ingredientUnitIds, ingredientNotes);            	
-            }
+		try {
+			String username = principal.getName();
+			User user = userRepository.findByEmail(username)
+					.orElseThrow(() -> new UserPrincipalNotFoundException("User not exists!"));
+			Recipe recipe = recipeService.convertToEntity(recipeDto, user);
 
-            if(images.length > 0) {
-            	recipeImageService.saveAll(savedRecipe, images);            	
-            }
+			if (tags.length > 0) {
+				Set<Tag> savedTags = tagService.saveAll(tags);
+				recipe.setTags(savedTags);
+			}
+			recipe.setUser(user);
+			Recipe savedRecipe = recipeService.saveRecipe(recipe);
 
-            redirectAttr.addFlashAttribute("success", "Your recipe created successfully!");
+			if (ingredientNames.length > 0) {
+				ingredientService.saveRecipeIngredients(savedRecipe, ingredientNames, ingredientQuantities,
+						ingredientUnitIds, ingredientNotes);
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirectAttr.addFlashAttribute("error", e.getMessage());
-        }
+			if (images.length > 0) {
+				recipeImageService.saveAll(savedRecipe, images);
+			}
 
-        return "redirect:" + request.getHeader("Referer");
-    }
-	
+			redirectAttr.addFlashAttribute("success", "Your recipe created successfully!");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttr.addFlashAttribute("error", e.getMessage());
+		}
+
+		return "redirect:" + request.getHeader("Referer");
+	}
+
 	@GetMapping("/{recipe}")
 	public String show(@PathVariable Recipe recipe, Model model) {
 		model.addAttribute("recipe", RecipeMapper.toDto(recipe));
@@ -146,11 +166,12 @@ public class RecipeController {
 		model.addAttribute("user_detail", userDetailService.getUserDetailDto(recipe.getUser().getId()));
 		model.addAttribute("user_social_links", userSocialLinksService.getUserSocialLinks(recipe.getUser().getId()));
 		model.addAttribute("authors", userService.getThreeRandomUsersWithRecipes());
-		
+
 		model.addAttribute("tags", recipe.getTags());
 		model.addAttribute("recent_recipies", recipeService.recentRecipes(PageRequest.of(0, 3)));
-		 return "recipes/recipe-details";
-	}
 
+		model.addAttribute("categories", categoryService.getAllCategories());
+		return "recipes/recipe-details";
+	}
 
 }

@@ -48,8 +48,8 @@
 
 
 						<!-- search -->
-						<form class="search-bar">
-							<input id="search-query" name="s" type="search" placeholder="Type &amp; Hit Enter...">
+						<form class="search-bar" th:action="@{/recipes/search}">
+							<input id="search-query" th:value="${search == null ? '' : search}" name="s" type="search" placeholder="Type &amp; Hit Enter...">
 						</form>
 
 						<ul class="navbar-nav mx-auto">
@@ -59,7 +59,8 @@
 							<li class="nav-item" th:if="${isAuthenticated}">
 								<a class="nav-link py-0" th:href="@{/settings/profile}">
 									<div class="image-box">
-										<img src="https://placehold.co/400" alt="user-image">
+										<img th:if="${authUser != null}" th:src="@{ ${authUser.image}}" />
+										<span th:if="${authUser == null}">Guest</span>
 									</div>
 								</a>
 							</li>

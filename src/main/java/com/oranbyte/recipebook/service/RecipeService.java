@@ -8,10 +8,11 @@ import org.springframework.data.domain.Pageable;
 import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.Recipe;
 import com.oranbyte.recipebook.entity.User;
+import com.oranbyte.recipebook.exception.UserNotFoundException;
 
 public interface RecipeService {
 
-	Recipe saveRecipe(Recipe recipe);
+	Recipe saveRecipe(Recipe recipe) throws UserNotFoundException;
 	
 	Recipe convertToEntity(RecipeDto dto, User user);
 	
@@ -20,6 +21,8 @@ public interface RecipeService {
 	Page<RecipeDto> getAllRecipes(Pageable pageable);
 	
 	Page<RecipeDto> recentRecipes(Pageable pageable);
+	
+	Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty, Pageable pageable);
 
 	
 }

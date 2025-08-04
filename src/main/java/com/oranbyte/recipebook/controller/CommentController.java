@@ -1,5 +1,6 @@
 package com.oranbyte.recipebook.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +51,11 @@ public class CommentController {
 	private CommentRepository commentRepository;
 	
 	@PostMapping("/comment")
-	public ResponseEntity<Map<String, String>> save(@ModelAttribute CommentDto dto) {
+	public ResponseEntity<Map<String, String>> save(@ModelAttribute CommentDto dto, Principal principal) {
 		Map<String, String> response = new HashMap<>();
 
 	    try {
-	        UserDto userDto = userService.getUser(2L);
+	        UserDto userDto = userService.getUserDto(principal.getName());
 
 	        Recipe recipe = recipeRepository.findById(dto.getRecipeId())
 	    			.orElseThrow(() -> new RuntimeException("Recipe not found"));

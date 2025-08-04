@@ -16,7 +16,7 @@
 					<ul class="card-meta my-3 list-inline">
 						<li class="list-inline-item">
 							<a href="author-single.html" class="card-meta-author">
-								<img src="/images/john-doe.jpg" alt="John Doe">
+								<img th:src="${user.image}" alt="Profile">
 								<span th:text="${recipe.userName}">John Doe</span>
 							</a>
 						</li>
@@ -28,7 +28,7 @@
 							<i class="ti-calendar"></i><th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
 						</li>
 						<li class="list-inline-item">
-							<span th:text="${recipe.difficulty}">Easy</span>
+							Difficulty : <span th:text="${recipe.difficulty}">Easy</span>
 
 						</li>
 						<li class="list-inline-item">
@@ -128,17 +128,8 @@
 					</ul>
 					<a href="about-me.html" class="btn btn-primary mb-2">About me</a>
 				</div>
-				<!-- Promotion -->
-				<div class="promotion">
-					<img src="/images/promotion.jpg" class="img-fluid w-100">
-					<div class="promotion-content">
-						<h5 class="text-white mb-3">Create Your Stories!!</h5>
-						<p class="text-white mb-4">"Experimenting with flavors and finding my inner chef. It's a
-							delicious journey, one dish at a time."</p>
-						<a th:href="${isAuthenticated ? '/recipes/create' : '/login'}" class="btn btn-primary">Get
-							Started</a>
-					</div>
-				</div>
+				
+				<th:block th:replace="~{/fragments/promotion :: promotion}"></th:block>
 
 				<!-- authors -->
 				<div class="widget widget-author">
@@ -164,14 +155,12 @@
 
 				<div class="widget">
 					<h4 class="widget-title"><span>Never Miss A News</span></h4>
-					<form action="#!" method="post" name="mc-embedded-subscribe-form" target="_blank"
+					<form action="" method="post" name="mc-embedded-subscribe-form" target="_blank"
 						class="widget-search">
-						<input class="mb-3" id="search-query" name="s" type="search" placeholder="Your Email Address">
+						<input class="mb-3" id="search-query" name="email" type="email" placeholder="Your Email Address" required>
 						<i class="ti-email"></i>
 						<button type="submit" class="btn btn-primary btn-block" name="subscribe">Subscribe now</button>
-						<div style="position: absolute; left: -5000px;" aria-hidden="true">
-							<input type="text" name="b_463ee871f45d2d93748e77cad_a0a2c6d074" tabindex="-1">
-						</div>
+			
 					</form>
 				</div>
 
@@ -179,25 +168,19 @@
 				<div class="widget widget-categories">
 					<h4 class="widget-title"><span>Categories</span></h4>
 					<ul class="list-unstyled widget-list">
-						<li><a href="tags.html" class="d-flex">Creativity <small class="ml-auto">(4)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Demo <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Elements <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Food <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Microwave <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Natural <small class="ml-auto">(3)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Newyork city <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Nice <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Tech <small class="ml-auto">(2)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Videography <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Vlog <small class="ml-auto">(1)</small></a></li>
-						<li><a href="tags.html" class="d-flex">Wondarland <small class="ml-auto">(1)</small></a></li>
+						<li th:each="category : ${categories}">
+							<a th:href="@{/recipes(categoryId=${category.id})}" class="d-flex">
+								<th:block th:text="${category.name}">Category</th:block> 
+								<small class="ml-auto">(<b th:text="${category.recipeCount}"></b>)</small>
+							</a>
+						</li>
 					</ul>
 				</div><!-- tags -->
 				<div class="widget">
 					<h4 class="widget-title"><span>Tags</span></h4>
 					<ul class="list-inline widget-list-inline widget-card">
 						<li th:each="tag : ${tags}" class="list-inline-item">
-						    <a th:href="@{/tags/{id}(id=${tag.id})}" th:text="${tag.name}"></a>
+						    <a th:href="@{/recipes/search?tagId={id}(id=${tag.id})}" th:text="${tag.name}"></a>
 						</li>
 					</ul>
 				</div><!-- recent post -->
@@ -222,20 +205,13 @@
 
 				</div>
 
-				<!-- Social -->
-				<div class="widget">
-					<h4 class="widget-title"><span>Social Links</span></h4>
-					<ul class="list-inline widget-social">
-						<li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
-						<li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
-						<li class="list-inline-item"><a href="#"><i class="ti-linkedin"></i></a></li>
-						<li class="list-inline-item"><a href="#"><i class="ti-github"></i></a></li>
-						<li class="list-inline-item"><a href="#"><i class="ti-youtube"></i></a></li>
-					</ul>
-				</div>
+
+				<th:block th:replace="~{/fragments/social-links :: social_links}"></th:block>
+				
 			</aside>
 		</div>
 </section>
 
 <script th:src="@{/js/pages/comment.js}"></script>
+<script th:src="@{/js/pages/recipe-details.js}"></script>
 <th:block th:replace="~{/layouts/footer :: footer}"></th:block>

@@ -7,17 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.Category;
 import com.oranbyte.recipebook.entity.Recipe;
 import com.oranbyte.recipebook.entity.User;
+import com.oranbyte.recipebook.exception.UserNotFoundException;
 import com.oranbyte.recipebook.mapper.RecipeMapper;
 import com.oranbyte.recipebook.repository.CategoryRepository;
 import com.oranbyte.recipebook.repository.RecipeRepository;
 import com.oranbyte.recipebook.repository.UserRepository;
 import com.oranbyte.recipebook.service.RecipeService;
+import com.oranbyte.recipebook.specification.RecipeSpecification;
 
 @Service
 public class RecipeServiceImpl implements RecipeService{
@@ -32,13 +35,24 @@ public class RecipeServiceImpl implements RecipeService{
 	private CategoryRepository categoryRepository;
 	
 	@Override
-	public Recipe saveRecipe(Recipe recipe) {
+	public Recipe saveRecipe(Recipe recipe) throws UserNotFoundException {
 		if (recipe.getServings() <= 0) {
 		    recipe.setServings(1);
 		}
-		recipe.setUser(userRepository.findByEmail("admin@gmail.com"));
-	    return recipeRepository.save(recipe);
+		return recipeRepository.save(recipe);
 	}
+	
+	public Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty, Pageable pageable) {
+	    Specification<Recipe> spec = Specification
+	            .where(RecipeSpecification.hasCategory(categoryId))
+	            .and(RecipeSpecification.hasTag(tagId))
+	            .and(RecipeSpecification.hasTitleLike(title))
+	            .and(RecipeSpecification.hasDifficulty(difficulty));
+
+	    return recipeRepository.findAll(spec, pageable)
+	        .map(RecipeMapper::toDto);
+	}
+
 
 	
 	@Override

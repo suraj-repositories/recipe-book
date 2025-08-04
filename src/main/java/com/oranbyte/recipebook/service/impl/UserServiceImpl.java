@@ -41,4 +41,16 @@ public class UserServiceImpl implements UserService{
 	}
 
 
+	@Override
+	public User getUser(String username) {
+		return userRepository.findByEmail(username).orElse(null);
+	}
+
+
+	@Override
+	public UserDto getUserDto(String username) {
+		return userRepository.findByEmail(username).map(UserMapper::toDto).orElse(null);
+	}
+
+
 }

@@ -7,11 +7,18 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-9 mx-auto">
-				<h1 class="mb-4">Recipes</h1>
+				<h1 class="mb-4" th:text="${category != null} ? ${category.name + ' Recipes'} : 'Recipes'"></h1>
 				<ul class="list-inline">
-					<li class="list-inline-item"><a class="text-default" href="">Home
-							&nbsp; &nbsp; /</a></li>
-					<li class="list-inline-item text-primary">Recipes</li>
+					<li class="list-inline-item">
+						<a class="text-default" href="/">Home &nbsp; &nbsp; /</a>
+					</li>
+					<li class="list-inline-item">
+						<a class="text-default" href="/recipes">Recipes  </a>
+					</li>
+					<th:block th:if="${category != null}">
+						/&nbsp;&nbsp;<li class="list-inline-item text-primary" th:text="${category.name}"></li>
+					</th:block>
+					
 				</ul>
 			</div>
 		</div>
@@ -70,19 +77,42 @@
 
 
 <th:block th:replace="~{/recipes/recipe-cards :: recipe-cards}"></th:block>
-
 <div class="text-center mt-4">
-	<nav>
+	<nav class="position-relative z-5">
 		<ul class="pagination justify-content-center">
 			<li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-				<a class="page-link" th:href="@{/recipes(page=${currentPage - 1})}"> &Leftarrow; </a>
+				<a class="page-link"
+				   th:href="@{/recipes(
+						page=${currentPage - 1},
+						categoryId=${categoryId},
+						tagId=${tagId},
+						title=${title},
+						difficulty=${difficulty}
+				   )}"> &Leftarrow; </a>
 			</li>
+
 			<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
 				th:classappend="${i == currentPage} ? 'active'">
-				<a class="page-link" th:href="@{/recipes(page=${i})}" th:text="${i + 1}">1</a>
+				<a class="page-link"
+				   th:href="@{/recipes(
+						page=${i},
+						categoryId=${categoryId},
+						tagId=${tagId},
+						title=${title},
+						difficulty=${difficulty}
+				   )}"
+				   th:text="${i + 1}">1</a>
 			</li>
+
 			<li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-				<a class="page-link" th:href="@{/recipes(page=${currentPage + 1})}"> &Rightarrow; </a>
+				<a class="page-link"
+				   th:href="@{/recipes(
+						page=${currentPage + 1},
+						categoryId=${categoryId},
+						tagId=${tagId},
+						title=${title},
+						difficulty=${difficulty}
+				   )}"> &Rightarrow; </a>
 			</li>
 		</ul>
 	</nav>

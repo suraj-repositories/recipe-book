@@ -52,7 +52,7 @@ public class WebSecurityConfig {
 						    .requestMatchers("/admin/**").hasRole("admin")
 						    .requestMatchers("/user/**").hasAnyRole("user", "admin")
 						    .requestMatchers("/settings/**").hasAnyRole("user", "admin")
-						    .requestMatchers("/login", "/register", "/signup", "/css/**", "/js/**",  "/images/**", "/plugins/**").permitAll()
+						    .requestMatchers("/login", "/register", "/signup", "/css/**", "/js/**",  "/images/**", "/plugins/**", "/**").permitAll()
 						    .anyRequest().authenticated()
 						)
 					.formLogin(form -> form

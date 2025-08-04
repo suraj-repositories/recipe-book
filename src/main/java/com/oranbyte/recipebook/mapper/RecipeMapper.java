@@ -18,7 +18,8 @@ public class RecipeMapper {
                 .servings(recipe.getServings())
                 .difficulty(recipe.getDifficulty())
                 .userId(recipe.getUser().getId())
-                .userName(recipe.getUser().getName())
+                .userName(recipe.getUser().getName())   
+                .userImage(recipe.getUser().getImageUrl())   
                 .categoryId(recipe.getCategory().getId())
                 .categoryName(recipe.getCategory().getName())
                 .primaryImage(

@@ -1,11 +1,13 @@
 package com.oranbyte.recipebook.service.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.oranbyte.recipebook.dto.TagDto;
 import com.oranbyte.recipebook.entity.Tag;
 import com.oranbyte.recipebook.repository.RecipeTagRepository;
 import com.oranbyte.recipebook.repository.TagRepository;
@@ -34,6 +36,22 @@ public class TagServiceImpl implements TagService {
 		}
 
 		return tagSet;
+	}
+
+	@Override
+	public TagDto getTag(Long id) {
+		return tagRepository.findById(id)
+			    .map(tag -> {
+			        return new TagDto(tag.getId(), tag.getName());
+			    })
+			    .orElse(null);
+	}
+
+	@Override
+	public List<TagDto> getTop20Tags() {
+		return tagRepository.findTop20ByOrderByIdAsc().stream().map(tag -> {
+			return TagDto.builder().id(tag.getId()).name(tag.getName()).build();
+		}).toList();
 	}
 
 

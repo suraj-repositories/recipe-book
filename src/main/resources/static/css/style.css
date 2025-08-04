@@ -215,7 +215,6 @@ mark {
 }
 
 .section-sm {
-	padding-top: 80px;
 	padding-bottom: 80px;
 }
 
@@ -705,6 +704,9 @@ mark {
 .wave-shape-1 .path {
 	fill: #4FD675;
 }
+.z-5{
+	z-index: 5;
+}
 
 .wave-shape-2 {
 	position: absolute;
@@ -963,6 +965,10 @@ mark {
 	margin-right: 10px;
 	border: 1px solid #4FD675;
 	color: #4FD675;
+}
+
+.pagination .page-item.disabled .page-link{
+	filter: grayscale(1);
 }
 
 .pagination .page-item .page-link:hover {

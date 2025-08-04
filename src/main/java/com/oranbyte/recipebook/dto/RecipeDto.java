@@ -35,6 +35,7 @@ public class RecipeDto {
 
 	private Long userId;
 	private String userName;
+	private String userImage;
 
 	private Long categoryId;
 	private String categoryName;
