@@ -183,6 +183,10 @@
 						    <a th:href="@{/recipes/search?tagId={id}(id=${tag.id})}" th:text="${tag.name}"></a>
 						</li>
 					</ul>
+					<th:block th:if="${#lists.isEmpty(tags)}">
+						<p>No Tags.</p>
+					</th:block>
+					
 				</div><!-- recent post -->
 				<div class="widget">
 					<h4 class="widget-title">Recent Post</h4>
