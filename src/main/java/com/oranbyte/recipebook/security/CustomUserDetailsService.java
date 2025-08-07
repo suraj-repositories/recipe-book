@@ -2,6 +2,7 @@ package com.oranbyte.recipebook.security;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.repository.UserRepository;
+import com.oranbyte.recipebook.service.UserService;
 
 /**
  * Custom implementation of {@link UserDetailsService} for loading user details
@@ -23,18 +25,11 @@ import com.oranbyte.recipebook.repository.UserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+	@Autowired
 	private UserRepository userRepository;
-
-	/**
-	 * Constructs a new {@code CustomUserDetailsService} with the specified
-	 * {@link UserRepository}.
-	 *
-	 * @param userRepository The repository used to retrieve user information.
-	 */
-	public CustomUserDetailsService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
-
+	
+	@Autowired
+	private UserService userService;
 	/**
 	 * Loads user details by their email address.
 	 *
@@ -44,13 +39,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 	 *                                   found.
 	 */
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(email).orElse(null);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userService.getUser(username);
 
 		if (user != null) {
 			String authority = "ROLE_" + user.getRole();
 			return new org.springframework.security.core.userdetails.User(
-				user.getEmail(),
+				user.getUsername(),
 				user.getPassword(),
 				Collections.singleton(new SimpleGrantedAuthority(authority))
 			);

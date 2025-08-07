@@ -15,7 +15,7 @@
 					<h1 class="h2" th:text="${recipe.title}">Recipe Title</h1>
 					<ul class="card-meta my-3 list-inline">
 						<li class="list-inline-item">
-							<a href="author-single.html" class="card-meta-author">
+							<a th:href="@{/u/{username}(username=${user.username})}" class="card-meta-author">
 								<img th:src="${user.image}" alt="Profile">
 								<span th:text="${recipe.userName}">John Doe</span>
 							</a>
@@ -25,7 +25,8 @@
 								th:text="${recipe.prepTime + recipe.cookTime} + ' Min To Serve'">0 Min To Serve</span>
 						</li>
 						<li class="list-inline-item">
-							<i class="ti-calendar"></i><th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
+							<i class="ti-calendar"></i>
+							<th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
 						</li>
 						<li class="list-inline-item">
 							Difficulty : <span th:text="${recipe.difficulty}">Easy</span>
@@ -126,9 +127,9 @@
 						</li>
 
 					</ul>
-					<a href="about-me.html" class="btn btn-primary mb-2">About me</a>
+					<a th:href="@{/u/{username}(username=${user.username})}" class="btn btn-primary mb-2">About me</a>
 				</div>
-				
+
 				<th:block th:replace="~{/fragments/promotion :: promotion}"></th:block>
 
 				<!-- authors -->
@@ -140,11 +141,11 @@
 								<img class="widget-author-image" th:src="${author.image}">
 							</div>
 							<div class="media-body">
-								<h5 class="mb-1"><a class="post-title" href="author-single.html"><span
+								<h5 class="mb-1"><a class="post-title" th:href="@{/u/{username}(username=${author.username})}"><span
 											th:text="${author.name}"></span></a></h5>
 								<span th:text="${author.bio != null && #strings.length(author.bio) > 40 
 							                ? author.bio.substring(0, 30) + '...' 
-							                : author.email}"></span>
+							                : author.username}"></span>
 
 							</div>
 						</div>
@@ -157,10 +158,11 @@
 					<h4 class="widget-title"><span>Never Miss A News</span></h4>
 					<form action="" method="post" name="mc-embedded-subscribe-form" target="_blank"
 						class="widget-search">
-						<input class="mb-3" id="search-query" name="email" type="email" placeholder="Your Email Address" required>
+						<input class="mb-3" id="search-query" name="email" type="email" placeholder="Your Email Address"
+							required>
 						<i class="ti-email"></i>
 						<button type="submit" class="btn btn-primary btn-block" name="subscribe">Subscribe now</button>
-			
+
 					</form>
 				</div>
 
@@ -170,7 +172,7 @@
 					<ul class="list-unstyled widget-list">
 						<li th:each="category : ${categories}">
 							<a th:href="@{/recipes(categoryId=${category.id})}" class="d-flex">
-								<th:block th:text="${category.name}">Category</th:block> 
+								<th:block th:text="${category.name}">Category</th:block>
 								<small class="ml-auto">(<b th:text="${category.recipeCount}"></b>)</small>
 							</a>
 						</li>
@@ -180,13 +182,13 @@
 					<h4 class="widget-title"><span>Tags</span></h4>
 					<ul class="list-inline widget-list-inline widget-card">
 						<li th:each="tag : ${tags}" class="list-inline-item">
-						    <a th:href="@{/recipes/search?tagId={id}(id=${tag.id})}" th:text="${tag.name}"></a>
+							<a th:href="@{/recipes/search?tagId={id}(id=${tag.id})}" th:text="${tag.name}"></a>
 						</li>
 					</ul>
 					<th:block th:if="${#lists.isEmpty(tags)}">
 						<p>No Tags.</p>
 					</th:block>
-					
+
 				</div><!-- recent post -->
 				<div class="widget">
 					<h4 class="widget-title">Recent Post</h4>
@@ -196,10 +198,13 @@
 						<div class="d-flex">
 							<img class="card-img-sm" th:src="${recipe.primaryImage}">
 							<div class="ml-3">
-								<h5><a class="post-title" th:href="@{'/recipes/' + ${recipe.id}}" th:text="${recipe.title}"></a></h5>
+								<h5><a class="post-title" th:href="@{'/recipes/' + ${recipe.id}}"
+										th:text="${recipe.title}"></a></h5>
 								<ul class="card-meta list-inline mb-0">
 									<li class="list-inline-item mb-0">
-										<i class="ti-calendar"></i><th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}"></th:block>
+										<i class="ti-calendar"></i>
+										<th:block th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}">
+										</th:block>
 
 									</li>
 								</ul>
@@ -211,7 +216,7 @@
 
 
 				<th:block th:replace="~{/fragments/social-links :: social_links}"></th:block>
-				
+
 			</aside>
 		</div>
 </section>

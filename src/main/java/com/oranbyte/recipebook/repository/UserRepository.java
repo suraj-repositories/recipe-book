@@ -12,9 +12,12 @@ import com.oranbyte.recipebook.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
+	Optional<User> findByUsername(String email);
 	
 	@Query(value = "SELECT DISTINCT u.* FROM users u JOIN recipe r ON u.id = r.user_id ORDER BY RAND() LIMIT 3", nativeQuery = true)
 	List<User> findThreeRandomUsersWithRecipes();
+	
+	Optional<User> findByUsernameOrEmail(String username, String email);
 
 	
 }

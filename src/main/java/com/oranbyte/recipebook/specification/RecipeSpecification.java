@@ -9,6 +9,11 @@ import jakarta.persistence.criteria.Join;
 
 public class RecipeSpecification {
 
+	public static Specification<Recipe> hasUserId(Long userId) {
+	    return (root, query, cb) ->
+	            userId == null ? null : cb.equal(root.get("user").get("id"), userId);
+	}
+	
     public static Specification<Recipe> hasCategory(Long categoryId) {
         return (root, query, cb) ->
                 categoryId == null ? null : cb.equal(root.get("category").get("id"), categoryId);

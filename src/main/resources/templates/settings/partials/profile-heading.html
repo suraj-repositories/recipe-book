@@ -13,7 +13,7 @@
 				<div class="username" th:text="${authUser.email}">email@gmail.com</div>
 			</div>
 			<a class="visit_button" th:if="${authUser != null}"
-				th:href="@{/u/{username}(username=${authUser.id})}">Go to your personal profile</a>
+				th:href="@{/u/{username}(username=${authUser.username})}">Go to your personal profile</a>
 		</div>
 	</th:block>
 </body>

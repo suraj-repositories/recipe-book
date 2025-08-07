@@ -6,45 +6,51 @@
 <div class="author user-profile">
 	<div class="container position-relative">
 		<div class="profile-banner">
-			<div class="profile-banner-image-box">
+			<div class="profile-banner-image-box" th:classappend="${authUser != null and user != null and authUser.id == user.id} ? ' grayable'">
 				<img src="http://localhost:8080/uploads/recipes/7f7b3078-93fb-4e9f-b7e6-781a93ee085f.jpg">
+			</div>
+			<div class="action-btns" th:if="${authUser != null and user != null and authUser.id == user.id}">
+			    <label for="banner-image" class="select-banner-image"><i class="ti-export"></i></label>
+			    <input type="file" id="banner-image" accept=".jpg, .png, .svg, .jpeg, .avif, .webp" />
+			    <button type="button" class="delete-btn"><i class="ti-trash"></i></button>
 			</div>
 		</div>
 
-		<div class="row no-gutters justify-content-center">
+		<div class="row no-gutters justify-content-center mt-4">
 			<div class="col-lg-3 col-md-4 mb-4 mb-md-0">
 
 
-				<img class="author-image"
-					src="http://localhost:8080/uploads/pofile/87083d9d-9715-49f9-996a-dbd5f9de447e.png">
+				<img class="author-image" th:src="@{${user.image}}">
 
 			</div>
 			<div class="col-md-8 col-lg-6 text-center text-md-left">
-				<h3 class="mb-2">Shubham kumar</h2>
-					<strong class="mb-2 d-block">Author &amp; developer of UP, Oranbyte team</strong>
-					<div class="content">
-						<p>lorem ipsum sldkfj sdlkf jsldk flskdf lkdsjf lksjdflks djfl dlkf jsldk flskdf lkdsjf lksjdflks djfldlkf jsldk flskdf lkdsjf lksjdflks djfldlkf jsldk flskdf lkdsjf lksjdflks djfl
-						</p>
+				<h3 class="mb-2" th:text="${user.name}">my name</h3>
+				<strong class="mb-2 d-block" th:text="${user.username}">My username</strong>
+				<div class="content">
+					<p th:text="${user.bio}">Something about me</p>
 
-					</div>
+				</div>
 
-					<a class="post-count mb-1" href="author-single.html#post"><i class="ti-pencil-alt mr-2"></i><span
-							class="text-primary">2</span> Posts by this author</a>
-					<ul class="list-inline social-icons">
+				<div class="d-flex flex-wrap g-2">
 
-						<li class="list-inline-item"><a href="#"><i class="ti-facebook"></i></a></li>
+					<a class="post-count mb-1" href="author-single.html#post">
+						<i class="ti-pencil-alt mr-2"></i>
+						<span class="text-primary" th:text="${user.recipeCount}">0</span> Posts by this author
+					</a>
+				</div>
 
-						<li class="list-inline-item"><a href="#"><i class="ti-twitter-alt"></i></a></li>
+				<ul class="list-inline social-icons">
+					<li class="list-inline-item" th:each="social_link : ${user_social_links}">
+						<a th:href="${social_link.url}" target="_blank" rel="noopener noreferrer">
+							<i th:class="${'ti-' + social_link.platformName.toLowerCase()}"></i>
+						</a>
+					</li>
 
-						<li class="list-inline-item"><a href="#"><i class="ti-github"></i></a></li>
-
-						<li class="list-inline-item"><a href="#"><i class="ti-link"></i></a></li>
-
-					</ul>
+				</ul>
 			</div>
-			
-			
-			
+
+
+
 		</div>
 
 		<svg class="author-shape-1" width="39" height="40" viewBox="0 0 39 40" fill="none"
@@ -101,10 +107,13 @@
 			stroke-width="2" />
 	</svg>
 
-	
-	
+
+
 </div>
 <th:block th:replace="~{/recipes/recipe-cards :: recipe-cards}"></th:block>
+
+<th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
+
 
 
 <th:block th:replace="~{/settings/partials/footer :: footer}"></th:block>

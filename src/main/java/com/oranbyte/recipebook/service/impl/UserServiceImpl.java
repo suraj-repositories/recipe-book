@@ -23,12 +23,10 @@ public class UserServiceImpl implements UserService{
 		return userRepository.findById(id).map(UserMapper::toDto).orElse(null);
 	}
 
-
 	@Override
 	public User save(User user) {
 		return userRepository.save(user);
 	}
-
 
 	@Override
 	public List<UserDto> getThreeRandomUsersWithRecipes() {
@@ -43,13 +41,13 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User getUser(String username) {
-		return userRepository.findByEmail(username).orElse(null);
+		return userRepository.findByUsernameOrEmail(username, username).orElse(null);
 	}
 
 
 	@Override
 	public UserDto getUserDto(String username) {
-		return userRepository.findByEmail(username).map(UserMapper::toDto).orElse(null);
+		return userRepository.findByUsername(username).map(UserMapper::toDto).orElse(null);
 	}
 
 

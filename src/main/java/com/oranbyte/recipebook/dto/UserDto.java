@@ -1,6 +1,5 @@
 package com.oranbyte.recipebook.dto;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,6 +21,7 @@ public class UserDto {
 
 	private Long id;
 	private String name;
+	private String username;
 	private String email;
 	private String role;
 	private String image;
@@ -32,5 +32,5 @@ public class UserDto {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 	
-	private List<RecipeDto> recipes;
+	private int recipeCount;
 }

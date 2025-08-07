@@ -77,45 +77,6 @@
 
 
 <th:block th:replace="~{/recipes/recipe-cards :: recipe-cards}"></th:block>
-<div class="text-center mt-4">
-	<nav class="position-relative z-5">
-		<ul class="pagination justify-content-center">
-			<li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-				<a class="page-link"
-				   th:href="@{/recipes(
-						page=${currentPage - 1},
-						categoryId=${categoryId},
-						tagId=${tagId},
-						title=${title},
-						difficulty=${difficulty}
-				   )}"> &Leftarrow; </a>
-			</li>
-
-			<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-				th:classappend="${i == currentPage} ? 'active'">
-				<a class="page-link"
-				   th:href="@{/recipes(
-						page=${i},
-						categoryId=${categoryId},
-						tagId=${tagId},
-						title=${title},
-						difficulty=${difficulty}
-				   )}"
-				   th:text="${i + 1}">1</a>
-			</li>
-
-			<li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-				<a class="page-link"
-				   th:href="@{/recipes(
-						page=${currentPage + 1},
-						categoryId=${categoryId},
-						tagId=${tagId},
-						title=${title},
-						difficulty=${difficulty}
-				   )}"> &Rightarrow; </a>
-			</li>
-		</ul>
-	</nav>
-</div>
+<th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
 
 <th:block th:replace="~{/layouts/footer :: footer}"></th:block>

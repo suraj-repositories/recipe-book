@@ -54,19 +54,18 @@ public class ProfileSettingsController {
 	
 	@GetMapping
 	public String index(Model model, Principal principal) throws UserNotFoundException {
-		String email = principal.getName();
-	    User repoUser = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
-	    UserDto user = userService.getUser(repoUser.getId());
+	   
+	    UserDto user = userService.getUserDto(principal.getName());
 		model.addAttribute("profileuser", user);
 		
+		System.out.println(user+ "  "+ principal.getName());
 		return "settings/profile";
 	}
 	
 	@PostMapping("/update")
 	public String updateProfile(@ModelAttribute UserDto form, Principal principal, HttpServletRequest request, RedirectAttributes redirectAttributes) throws UserNotFoundException {
 	   
-		String email = principal.getName();
-	    User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+		User user = userService.getUser(principal.getName());
 	    
 	    user.setName(form.getName());
 	    user.setEmail(form.getEmail());

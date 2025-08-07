@@ -24,5 +24,9 @@ public interface RecipeService {
 	
 	Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty, Pageable pageable);
 
+	Page<RecipeDto> searchRecipes(Long userId, Long categoryId, Long tagId, String title, String difficulty, Pageable pageable);
+	
+	int getRecipeCount(Long userid);
+
 	
 }

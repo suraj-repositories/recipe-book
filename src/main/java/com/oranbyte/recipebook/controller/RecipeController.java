@@ -1,6 +1,5 @@
 package com.oranbyte.recipebook.controller;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +28,9 @@ import com.oranbyte.recipebook.entity.Tag;
 import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.mapper.RecipeMapper;
 import com.oranbyte.recipebook.mapper.UserMapper;
-import com.oranbyte.recipebook.repository.UserRepository;
 import com.oranbyte.recipebook.service.CategoryService;
 import com.oranbyte.recipebook.service.IngredientService;
+import com.oranbyte.recipebook.service.PaginationService;
 import com.oranbyte.recipebook.service.RecipeImageService;
 import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.service.TagService;
@@ -59,9 +58,6 @@ public class RecipeController {
 	private UserService userService;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private TagService tagService;
 
 	@Autowired
@@ -75,36 +71,40 @@ public class RecipeController {
 
 	@Autowired
 	private UserSocialLinksService userSocialLinksService;
+	
+	@Autowired
+	private PaginationService paginationService;
 
 	@GetMapping
 	public String index(
-			@RequestParam(defaultValue = "0") int page, 
-			@RequestParam(defaultValue = "15") int size,
-			@RequestParam(required = false) Long categoryId, 
-			@RequestParam(required = false) Long tagId,
-			@RequestParam(required = false) String title, 
-			@RequestParam(required = false) String difficulty,
-			Model model) {
+	        @RequestParam(defaultValue = "1") int page,
+	        @RequestParam(defaultValue = "15") int size,
+	        @RequestParam(required = false) Long categoryId,
+	        @RequestParam(required = false) Long tagId,
+	        @RequestParam(required = false) String title,
+	        @RequestParam(required = false) String difficulty,
+	        Model model) {
 
-		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<RecipeDto> recipePage = recipeService.searchRecipes(categoryId, tagId, title, difficulty, pageable);
+	    int pageIndex = Math.max(page - 1, 0);
 
-		model.addAttribute("recipes", recipePage.getContent());
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", recipePage.getTotalPages());
-		model.addAttribute("tagId", tagId);
-		model.addAttribute("title", title);
-		model.addAttribute("difficulty", difficulty);
+	    Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+	    Page<RecipeDto> recipePage = recipeService.searchRecipes(categoryId, tagId, title, difficulty, pageable);
 
-		 List<CategoryDto> categories = categoryService.getAllCategories();
-		 CategoryDto currentCategory = categories.stream().filter(category-> category.getId().equals(categoryId))
-				 .findFirst().orElse(null);
-		
-		model.addAttribute("categoryId", categoryId);
-		model.addAttribute("category", currentCategory);
-		model.addAttribute("categories", categories);
+	    model.addAttribute("recipes", recipePage.getContent());
+	    model.addAllAttributes(paginationService.getPageMetadata(recipePage, page));
+	    model.addAttribute("currentPageDisplay", page);
+	    
+	    List<CategoryDto> categories = categoryService.getAllCategories();
+	    CategoryDto currentCategory = categories.stream()
+	            .filter(category -> category.getId().equals(categoryId))
+	            .findFirst()
+	            .orElse(null);
 
-		return "recipes/recipes";
+	    model.addAttribute("categoryId", categoryId);
+	    model.addAttribute("category", currentCategory);
+	    model.addAttribute("categories", categories);
+
+	    return "recipes/recipes";
 	}
 
 	@GetMapping("create")
@@ -127,9 +127,7 @@ public class RecipeController {
 			RedirectAttributes redirectAttr, Principal principal, HttpServletRequest request) {
 
 		try {
-			String username = principal.getName();
-			User user = userRepository.findByEmail(username)
-					.orElseThrow(() -> new UserPrincipalNotFoundException("User not exists!"));
+			User user = userService.getUser(principal.getName());
 			Recipe recipe = recipeService.convertToEntity(recipeDto, user);
 
 			if (tags.length > 0) {

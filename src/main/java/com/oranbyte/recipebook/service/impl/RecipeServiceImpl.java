@@ -18,7 +18,6 @@ import com.oranbyte.recipebook.exception.UserNotFoundException;
 import com.oranbyte.recipebook.mapper.RecipeMapper;
 import com.oranbyte.recipebook.repository.CategoryRepository;
 import com.oranbyte.recipebook.repository.RecipeRepository;
-import com.oranbyte.recipebook.repository.UserRepository;
 import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.specification.RecipeSpecification;
 
@@ -27,9 +26,6 @@ public class RecipeServiceImpl implements RecipeService{
 
 	@Autowired
 	private RecipeRepository recipeRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -43,11 +39,10 @@ public class RecipeServiceImpl implements RecipeService{
 	}
 	
 	public Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty, Pageable pageable) {
-	    Specification<Recipe> spec = Specification
-	            .where(RecipeSpecification.hasCategory(categoryId))
-	            .and(RecipeSpecification.hasTag(tagId))
-	            .and(RecipeSpecification.hasTitleLike(title))
-	            .and(RecipeSpecification.hasDifficulty(difficulty));
+		Specification<Recipe> spec = RecipeSpecification.hasCategory(categoryId)
+			    .and(RecipeSpecification.hasTag(tagId))
+			    .and(RecipeSpecification.hasTitleLike(title))
+			    .and(RecipeSpecification.hasDifficulty(difficulty));
 
 	    return recipeRepository.findAll(spec, pageable)
 	        .map(RecipeMapper::toDto);
@@ -101,6 +96,25 @@ public class RecipeServiceImpl implements RecipeService{
 	public Page<RecipeDto> recentRecipes(Pageable pageable) {
 	    return recipeRepository.findByOrderByIdDesc(pageable)
 	            .map(RecipeMapper::toDto);
+	}
+
+	@Override
+	public int getRecipeCount(Long userid) {
+		return recipeRepository.countRecipesByUserId(userid);
+	}
+
+	@Override
+	public Page<RecipeDto> searchRecipes(Long userId, Long categoryId, Long tagId, String title, String difficulty,
+			Pageable pageable) {
+		Specification<Recipe> spec = RecipeSpecification.hasUserId(userId)
+			    .and(RecipeSpecification.hasCategory(categoryId))
+			    .and(RecipeSpecification.hasTag(tagId))
+			    .and(RecipeSpecification.hasTitleLike(title))
+			    .and(RecipeSpecification.hasDifficulty(difficulty));
+
+
+	    return recipeRepository.findAll(spec, pageable)
+	        .map(RecipeMapper::toDto);
 	}
 
 

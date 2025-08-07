@@ -14,6 +14,7 @@ public class UserMapper {
 		return UserDto.builder()
 				.id(user.getId())
 				.name(user.getName())
+				.username(user.getUsername())
 				.email(user.getEmail())
 				.role(user.getRole())
 				.image(user.getImageUrl())
@@ -24,11 +25,6 @@ public class UserMapper {
 				.url(Optional.ofNullable(user.getUserDetail())
 			             .map(UserDetail::getWebsiteUrl)
 			             .orElse(null))
-				.recipes( 
-						user.getRecipes().stream()
-                            .map(RecipeMapper::toDto)
-                            .toList()
-                 )
 				.socialLinks(
 						user.getSocialLinks()
 					    .stream()
