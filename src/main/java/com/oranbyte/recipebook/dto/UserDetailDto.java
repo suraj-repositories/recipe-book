@@ -17,4 +17,6 @@ public class UserDetailDto {
 	private String bio;
 	private String websiteUrl;
 	
+	private String bannerImage;
+	
 }

@@ -1,5 +1,7 @@
 package com.oranbyte.recipebook.entity;
 
+import java.io.File;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,16 +21,28 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UserDetail {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String bio;
-	
+
 	private String websiteUrl;
-	
+
+	private String bannerImage;
+
 	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+
+	public String getBannerImageUrl() {
+		if (bannerImage == null || bannerImage.trim().isEmpty()) {
+			return null;
+		} else {
+			String uploadDir = System.getProperty("user.dir") + "/uploads/";
+			File file = new File(uploadDir + bannerImage.trim());
+			return file.exists() ? "/uploads/" + bannerImage.trim() : "/images/banner/default-banner.jpg";
+		}
+	}
 }

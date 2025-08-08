@@ -36,7 +36,7 @@
 							</h3>
 							<ul class="card-meta list-inline">
 								<li class="list-inline-item">
-									<a th:href="@{'/users/' + ${recipe.userId}}" class="card-meta-author">
+									<a th:href="@{'/u/' + ${recipe.userName}}" class="card-meta-author">
 										<img th:src="@{${recipe.userImage}}" th:alt="${recipe.userName}">
 										<span th:text="${recipe.userName}">User Name</span>
 									</a>

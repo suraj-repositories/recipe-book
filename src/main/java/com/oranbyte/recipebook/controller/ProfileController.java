@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oranbyte.recipebook.dto.RecipeDto;
+import com.oranbyte.recipebook.dto.UserDetailDto;
 import com.oranbyte.recipebook.dto.UserDto;
 import com.oranbyte.recipebook.service.PaginationService;
 import com.oranbyte.recipebook.service.RecipeService;
+import com.oranbyte.recipebook.service.UserDetailService;
 import com.oranbyte.recipebook.service.UserService;
 import com.oranbyte.recipebook.service.UserSocialLinksService;
 
@@ -28,6 +30,9 @@ public class ProfileController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserDetailService userDetailService;
 	
 	@Autowired
 	private UserSocialLinksService userSocialLinksService;
@@ -48,11 +53,14 @@ public class ProfileController {
 			) {
 		
 		UserDto user = userService.getUserDto(username);
+		UserDetailDto userDetail = userDetailService.getUserDetailDto(user.getId());
 		
 		int recipeCount = recipeService.getRecipeCount(user.getId());
 		user.setRecipeCount(recipeCount);
 		
 		model.addAttribute("user", user);
+		model.addAttribute("user_detail", userDetail);
+		
 		model.addAttribute("user_social_links", userSocialLinksService.getUserSocialLinks(user.getId()));
 		
 		int pageIndex = Math.max(page - 1, 0);

@@ -9,6 +9,7 @@ public class UserDetailMapper {
 				.id(userDetail.getId())
 				.bio(userDetail.getBio())
 				.websiteUrl(userDetail.getWebsiteUrl())
+				.bannerImage(userDetail.getBannerImageUrl())
 				.build();
 	}
 }

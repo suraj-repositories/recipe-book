@@ -5,25 +5,24 @@
 
 <div class="author user-profile">
 	<div class="container position-relative">
-		<div class="profile-banner">
+		<div th:if="${user_detail != null && user_detail.bannerImage != null}" class="profile-banner">
 			<div class="profile-banner-image-box" th:classappend="${authUser != null and user != null and authUser.id == user.id} ? ' grayable'">
-				<img src="http://localhost:8080/uploads/recipes/7f7b3078-93fb-4e9f-b7e6-781a93ee085f.jpg">
+				<img th:src="@{${user_detail.bannerImage}}" >
 			</div>
 			<div class="action-btns" th:if="${authUser != null and user != null and authUser.id == user.id}">
-			    <label for="banner-image" class="select-banner-image"><i class="ti-export"></i></label>
-			    <input type="file" id="banner-image" accept=".jpg, .png, .svg, .jpeg, .avif, .webp" />
-			    <button type="button" class="delete-btn"><i class="ti-trash"></i></button>
+			    <label for="uploadBannerInput" class="select-banner-image"><i class="ti-export"></i></label>
+			    <input type="file" id="uploadBannerInput" accept=".jpg, .png, .svg, .jpeg, .avif, .webp" />
+			   <form th:action="@{/user-detail/{id}/delete-banner(id=${user_detail.id})}"  method="post"> 
+				<button class="delete-btn"><i class="ti-trash"></i></button>
+			</form>
 			</div>
 		</div>
 
-		<div class="row no-gutters justify-content-center mt-4">
-			<div class="col-lg-3 col-md-4 mb-4 mb-md-0">
-
-
+		<div class="user-profile-detail mt-4">
+			<div class="mb-md-0 d-flex h-100 justify-content-center">
 				<img class="author-image" th:src="@{${user.image}}">
-
 			</div>
-			<div class="col-md-8 col-lg-6 text-center text-md-left">
+			<div class="text-center text-md-left limit-width">
 				<h3 class="mb-2" th:text="${user.name}">my name</h3>
 				<strong class="mb-2 d-block" th:text="${user.username}">My username</strong>
 				<div class="content">
@@ -31,7 +30,7 @@
 
 				</div>
 
-				<div class="d-flex flex-wrap g-2">
+				<div class="d-flex flex-wrap justify-content-center justify-content-md-start g-2">
 
 					<a class="post-count mb-1" href="author-single.html#post">
 						<i class="ti-pencil-alt mr-2"></i>
@@ -115,5 +114,5 @@
 <th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
 
 
-
+<script th:src="@{/js/pages/user-profile.js}"></script>
 <th:block th:replace="~{/settings/partials/footer :: footer}"></th:block>
