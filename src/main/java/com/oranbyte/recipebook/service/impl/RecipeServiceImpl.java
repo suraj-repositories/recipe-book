@@ -1,6 +1,7 @@
 package com.oranbyte.recipebook.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +116,11 @@ public class RecipeServiceImpl implements RecipeService{
 
 	    return recipeRepository.findAll(spec, pageable)
 	        .map(RecipeMapper::toDto);
+	}
+
+	@Override
+	public Optional<Recipe> getRecipe(Long id) {
+		return recipeRepository.findById(id);
 	}
 
 

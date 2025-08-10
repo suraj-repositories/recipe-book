@@ -3,6 +3,9 @@ package com.oranbyte.recipebook.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.oranbyte.recipebook.dto.UserDto;
@@ -12,14 +15,13 @@ import com.oranbyte.recipebook.repository.UserRepository;
 import com.oranbyte.recipebook.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	
+
 	@Override
-	public UserDto getUser(Long id) {
+	public UserDto getUserDto(Long id) {
 		return userRepository.findById(id).map(UserMapper::toDto).orElse(null);
 	}
 
@@ -32,22 +34,46 @@ public class UserServiceImpl implements UserService{
 	public List<UserDto> getThreeRandomUsersWithRecipes() {
 		return userRepository.findThreeRandomUsersWithRecipes().stream().map(UserMapper::toDto).toList();
 	}
-	
+
 	@Override
 	public boolean existsByEmail(String email) {
 		return userRepository.findByEmail(email) != null;
 	}
-
 
 	@Override
 	public User getUser(String username) {
 		return userRepository.findByUsernameOrEmail(username, username).orElse(null);
 	}
 
-
 	@Override
 	public UserDto getUserDto(String username) {
 		return userRepository.findByUsername(username).map(UserMapper::toDto).orElse(null);
+	}
+
+	@Override
+	public User getLoginUser() {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+	    System.out.println(auth);
+	    if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+	        return null;
+	    }
+
+	    Object principal = auth.getPrincipal();
+	    String username;
+	    System.out.println(principal);
+	    if (principal instanceof UserDetails userDetails) {
+	        username = userDetails.getUsername();
+	    } else {
+	        username = principal.toString();
+	    }
+	    System.out.println(username);
+	    return getUser(username);
+	}
+
+	@Override
+	public User getUser(Long id) {
+		return userRepository.findById(id).orElse(null);
 	}
 
 

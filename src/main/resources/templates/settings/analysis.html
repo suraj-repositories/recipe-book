@@ -7,7 +7,128 @@
 	<h3>Analysis</h3>
 	<hr class="mt-0 mb-3">
 
-	
+	<div class="row g-4">
+		<!-- Chart 1 -->
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm border-0 h-100">
+				<div class="card-header">
+					Chart 1
+				</div>
+				<div class="card-body d-flex align-items-center justify-content-center">
+					<div id="chart" style="height: 250px;"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Chart 2 -->
+		<div class="col-12 col-lg-6">
+			<div class="card shadow-sm border-0 h-100">
+				<div class="card-header">
+					Chart 2
+				</div>
+				<div class="card-body">
+					<div id="chart2" style="height: 300px;"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Chart 3 -->
+		<div class="col-12">
+			<div class="card shadow-sm border-0 mt-4">
+				<div class="card-header">
+					Chart 3
+				</div>
+				<div class="card-body">
+					<div id="chart3" style="height: 350px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		var options = {
+			series: [44, 55, 41, 17, 15],
+			chart: {
+				type: 'donut',
+				height: 350,
+			},
+			legend: {
+				show: false
+			},
+			
+		};
+
+		var chart = new ApexCharts(document.querySelector("#chart"), options);
+		chart.render();
+
+
+		var options = {
+			series: [{
+				name: 'series1',
+				data: [31, 40, 28, 51, 42, 109, 100]
+			}, {
+				name: 'series2',
+				data: [11, 32, 45, 32, 34, 52, 41]
+			}],
+			chart: {
+				height: 350,
+				type: 'area'
+			},
+			dataLabels: {
+				enabled: false
+			},
+			stroke: {
+				curve: 'smooth'
+			},
+			xaxis: {
+				type: 'datetime',
+				categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+			},
+			tooltip: {
+				x: {
+					format: 'dd/MM/yy HH:mm'
+				},
+			},
+		};
+
+		var chart = new ApexCharts(document.querySelector("#chart3"), options);
+		chart.render();
+
+
+		var options = {
+			series: [44, 55, 67, 83],
+			chart: {
+				height: 350,
+				type: 'radialBar',
+			},
+			plotOptions: {
+				radialBar: {
+					dataLabels: {
+						name: {
+							fontSize: '22px',
+						},
+						value: {
+							fontSize: '16px',
+						},
+						total: {
+							show: true,
+							label: 'Total',
+							formatter: function (w) {
+								// By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+								return 249
+							}
+						}
+					}
+				}
+			},
+			labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+		};
+
+		var chart = new ApexCharts(document.querySelector("#chart2"), options);
+		chart.render();
+
+	</script>
 
 </div>
 

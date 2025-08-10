@@ -9,15 +9,19 @@ import com.oranbyte.recipebook.entity.User;
 public interface UserService {
 	
 	User getUser(String username);
+	
+	User getUser(Long id);
 
 	UserDto getUserDto(String username);
 	
-	UserDto getUser(Long id);
+	UserDto getUserDto(Long id);
 	
 	User save(User user);
 	
 	List<UserDto> getThreeRandomUsersWithRecipes();
 	
 	boolean existsByEmail(String email);
+	
+	User getLoginUser();
 	
 }

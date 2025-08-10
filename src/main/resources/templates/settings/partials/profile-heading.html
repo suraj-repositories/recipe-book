@@ -14,6 +14,7 @@
 			</div>
 			<a class="visit_button" th:if="${authUser != null}"
 				th:href="@{/u/{username}(username=${authUser.username})}">Go to your personal profile</a>
+			<button class="sidebar-toggle-btn" id="sidebar-toggle"><i class="ti-layout-sidebar-left"></i></button>
 		</div>
 	</th:block>
 </body>

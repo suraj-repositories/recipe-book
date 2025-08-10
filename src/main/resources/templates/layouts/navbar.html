@@ -57,7 +57,7 @@
 								<a class="nav-link" th:href="@{/login}">Login</a>
 							</li>
 							<li class="nav-item" th:if="${isAuthenticated}">
-								<a class="nav-link py-0" th:href="@{/settings/profile}">
+								<a class="nav-link navbar-image py-0" th:href="@{/settings/profile}">
 									<div class="image-box">
 										<img th:if="${authUser != null}" th:src="@{ ${authUser.image}}" />
 										<span th:if="${authUser == null}">Guest</span>

@@ -30,42 +30,40 @@ import lombok.Setter;
 @Builder
 public class Recipe extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String title;
+	private String title;
 
-    private String description;
+	private String description;
 
-    @Lob
-    private String instructions;
+	@Lob
+	private String instructions;
 
-    private long prepTime;
+	private long prepTime;
 
-    private long cookTime;
+	private long cookTime;
 
-    private int servings;
+	private int servings;
 
-    private String difficulty;
+	private String difficulty;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+	private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-    
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeImage> images = new ArrayList<>();
-    
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-        name = "recipe_tags",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "category_id", nullable = false)
+	private Category category;
 
+	@OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RecipeImage> images = new ArrayList<>();
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "recipe_tags", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private Set<Tag> tags = new HashSet<>();
+
+	@OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RecipeReaction> reactions = new ArrayList<>();
 }

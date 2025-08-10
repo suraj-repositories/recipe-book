@@ -1,15 +1,15 @@
 
 
 // Preloader js    
-$(window).on('load', function () {
+$(window).on('load', function() {
 	'use strict';
 	$('.preloader').fadeOut(100);
 });
 
-(function ($) {
+(function($) {
 	'use strict';
 
-	$(window).on('scroll', function () {
+	$(window).on('scroll', function() {
 		var scrolling = $(this).scrollTop();
 		if (scrolling > 10) {
 			$('.navigation').addClass('nav-bg');
@@ -19,21 +19,21 @@ $(window).on('load', function () {
 	});
 
 	// tab
-	$('.tab-content').find('.tab-pane').each(function (idx, item) {
+	$('.tab-content').find('.tab-pane').each(function(idx, item) {
 		var navTabs = $(this).closest('.code-tabs').find('.nav-tabs'),
 			title = $(this).attr('title');
 		navTabs.append('<li class="nav-item"><a class="nav-link" href="#">' + title + '</a></li>');
 	});
 
-	$('.code-tabs ul.nav-tabs').each(function () {
+	$('.code-tabs ul.nav-tabs').each(function() {
 		$(this).find('li:first').addClass('active');
 	});
 
-	$('.code-tabs .tab-content').each(function () {
+	$('.code-tabs .tab-content').each(function() {
 		$(this).find('div:first').addClass('active');
 	});
 
-	$('.nav-tabs a').click(function (e) {
+	$('.nav-tabs a').click(function(e) {
 		e.preventDefault();
 		var tab = $(this).parent(),
 			tabIndex = tab.index(),
@@ -45,9 +45,9 @@ $(window).on('load', function () {
 	});
 
 	// Accordions
-	$('.collapse').on('shown.bs.collapse', function () {
+	$('.collapse').on('shown.bs.collapse', function() {
 		$(this).parent().find('.ti-plus').removeClass('ti-plus').addClass('ti-minus');
-	}).on('hidden.bs.collapse', function () {
+	}).on('hidden.bs.collapse', function() {
 		$(this).parent().find('.ti-minus').removeClass('ti-minus').addClass('ti-plus');
 	});
 
@@ -63,7 +63,7 @@ $(window).on('load', function () {
 	});
 
 	// copy to clipboard
-	$('.copy').click(function () {
+	$('.copy').click(function() {
 		$(this).siblings('.inputlink').select();
 		document.execCommand('copy');
 	});
@@ -81,7 +81,7 @@ $(window).on('load', function () {
 		userFeed.run();
 	}
 
-	setTimeout(function () {
+	setTimeout(function() {
 		$('.instagram-slider').slick({
 			dots: false,
 			speed: 300,
@@ -90,23 +90,23 @@ $(window).on('load', function () {
 			slidesToShow: 8,
 			slidesToScroll: 1,
 			responsive: [{
-					breakpoint: 1024,
-					settings: {
-						slidesToShow: 6
-					}
-				},
-				{
-					breakpoint: 600,
-					settings: {
-						slidesToShow: 4
-					}
-				},
-				{
-					breakpoint: 480,
-					settings: {
-						slidesToShow: 2
-					}
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 6
 				}
+			},
+			{
+				breakpoint: 600,
+				settings: {
+					slidesToShow: 4
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2
+				}
+			}
 			]
 		});
 	}, 1500);
@@ -114,78 +114,154 @@ $(window).on('load', function () {
 
 	// popup video
 	var $videoSrc;
-	$('.video-btn').click(function () {
+	$('.video-btn').click(function() {
 		$videoSrc = $(this).data('src');
 	});
 	console.log($videoSrc);
-	$('#myModal').on('shown.bs.modal', function (e) {
+	$('#myModal').on('shown.bs.modal', function(e) {
 		$('#video').attr('src', $videoSrc + '?autoplay=1&amp;modestbranding=1&amp;showinfo=0');
 	});
-	$('#myModal').on('hide.bs.modal', function (e) {
+	$('#myModal').on('hide.bs.modal', function(e) {
 		$('#video').attr('src', $videoSrc);
 	});
 
 
-	$('.summernote').each(function () {
+	$('.summernote').each(function() {
 		$(this).summernote({
-                        placeholder: '... something creative',
-                        tabsize: 2,
-                        height: 250,
-                        disableResizeEditor: false,
-                        fontNames: [
-                            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather',
-                            'Georgia', 'Impact', 'Times New Roman', 'Trebuchet MS', 'Verdana',
-                            'Roboto', 'Lora', 'Open Sans', 'Monospace', 'Tahoma'
-                        ],
-                        fontNamesIgnoreCheck: [
-                            'Roboto', 'Merriweather', 'Lora', 'Open Sans'
-                        ],
-                        toolbar: [
-                            ['style', ['undo', 'redo', 'style']],
-                            ['font', ['bold', 'italic', 'underline', 'clear']],
-                            ['font', ['strikethrough', 'superscript', 'subscript']],
-                            ['fontstyle', ['fontname']],
-                            ['fontsize', ['fontsize']],
-                            ['color', ['color']],
-                            ['para', ['ul', 'ol', 'paragraph']],
-                            ['table', ['table']],
-                            ['insert', ['link', 'picture', 'video']],
-                            ['view', ['fullscreen', 'codeview', 'help']]
-                        ],
+			placeholder: '... something creative',
+			tabsize: 2,
+			height: 250,
+			disableResizeEditor: false,
+			fontNames: [
+				'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather',
+				'Georgia', 'Impact', 'Times New Roman', 'Trebuchet MS', 'Verdana',
+				'Roboto', 'Lora', 'Open Sans', 'Monospace', 'Tahoma'
+			],
+			fontNamesIgnoreCheck: [
+				'Roboto', 'Merriweather', 'Lora', 'Open Sans'
+			],
+			toolbar: [
+				['style', ['undo', 'redo', 'style']],
+				['font', ['bold', 'italic', 'underline', 'clear']],
+				['font', ['strikethrough', 'superscript', 'subscript']],
+				['fontstyle', ['fontname']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'picture', 'video']],
+				['view', ['fullscreen', 'codeview', 'help']]
+			],
 
-                        callbacks: {
-                            onImageUpload: function(files) {
-                                const $editor = $(this);
+			callbacks: {
+				onImageUpload: function(files) {
+					const $editor = $(this);
 
-                                Array.from(files).forEach(file => {
-                                    const formData = new FormData();
-                                    formData.append('file', file);
+					Array.from(files).forEach(file => {
+						const formData = new FormData();
+						formData.append('file', file);
 
-                                    fetch("{{ route('upload.image') }}", {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                            },
-                                        })
-                                        .then(response => response.json())
-                                        .then(data => {
+						fetch("{{ route('upload.image') }}", {
+							method: 'POST',
+							body: formData,
+							headers: {
+								'X-CSRF-TOKEN': '{{ csrf_token() }}',
+							},
+						})
+							.then(response => response.json())
+							.then(data => {
 
-                                            if (data.url) {
-                                                $editor.summernote('insertImage', data
-                                                    .url);
-                                            } else {
-                                                alert('Failed to upload image.');
-                                            }
-                                        })
-                                        .catch(error => console.error('Error:', error));
-                                });
-                            }
-                        }
+								if (data.url) {
+									$editor.summernote('insertImage', data
+										.url);
+								} else {
+									alert('Failed to upload image.');
+								}
+							})
+							.catch(error => console.error('Error:', error));
+					});
+				}
+			}
 
-                    });
+		});
 	});
 
 })(jQuery);
 
 
+document.addEventListener('DOMContentLoaded', () => {
+	enableSidebarToggle("#sidebar-toggle");
+	enableFollowFeature("#follow-btn");
+});
+
+function enableSidebarToggle(elementSelector) {
+	const selector = document.querySelector(elementSelector);
+	const sidebar = document.querySelector(".user-dashboard .sidebar");
+	if (!selector || !sidebar) return;
+
+	let isAnimating = false;
+	const duration = parseFloat(getComputedStyle(sidebar)
+		.getPropertyValue('--sidebar-duration')) * 1000 || 1000;
+
+	function resetClasses() {
+		sidebar.classList.remove("show", "hide", "showing", "hiding", "hidden");
+	}
+
+	selector.addEventListener('click', function() {
+		if (isAnimating) return;
+		isAnimating = true;
+
+		const isShown = sidebar.classList.contains("show");
+
+		resetClasses();
+
+		if (isShown) {
+			sidebar.classList.add("hide");
+			sidebar.classList.add('hidden');
+			isAnimating = false;
+
+		} else {
+			sidebar.classList.add("showing");
+			sidebar.classList.remove("hidden");
+			sidebar.classList.add("show");
+			isAnimating = false;
+		}
+	});
+
+}
+
+function enableFollowFeature(selector) {
+	const followBtn = document.querySelector(selector);
+	if (!followBtn) return;
+
+	const userId = followBtn.getAttribute("data-user-id");
+
+	const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+	const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+	if(!userId | !csrfToken | !csrfHeader){
+		console.error("error happen");
+		return;
+	}
+
+	followBtn.addEventListener('click', () => {
+		fetch(`/user/${userId}/follow`, {
+			method: 'POST',
+			headers: { [csrfHeader]: csrfToken },
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.status === 'success') {
+					if (data.isFollowing || data.isFollowing == "true") {
+						followBtn.classList.add('active');
+						followBtn.textContent = "Following";
+					} else {
+						followBtn.classList.remove('active');
+						followBtn.textContent = "Follow";
+					}
+				} else {
+					Toastify.error(data.message);
+				}
+			});
+	});
+}

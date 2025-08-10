@@ -8,7 +8,7 @@ import com.oranbyte.recipebook.entity.RecipeImage;
 public class RecipeMapper {
 
     public static RecipeDto toDto(Recipe recipe) {
-        return RecipeDto.builder()
+    	 return RecipeDto.builder()
                 .id(recipe.getId())
                 .title(recipe.getTitle())
                 .description(recipe.getDescription())

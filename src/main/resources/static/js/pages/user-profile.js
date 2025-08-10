@@ -1,7 +1,10 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	enableBannerUpload("#uploadBannerInput", ".profile-banner img");
+	
 });
+
+
 
 function enableBannerUpload(inputSelector, updateSelector) {
 	const fileInput = document.querySelector(inputSelector);
@@ -10,6 +13,10 @@ function enableBannerUpload(inputSelector, updateSelector) {
 	const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 	const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
+	if(!fileInput){
+		console.error("banner upload input not available!");
+		return;
+	}
 
 	fileInput.addEventListener('change', async function() {
 		const file = fileInput.files[0];

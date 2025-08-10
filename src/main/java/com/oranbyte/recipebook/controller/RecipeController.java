@@ -26,12 +26,14 @@ import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.Recipe;
 import com.oranbyte.recipebook.entity.Tag;
 import com.oranbyte.recipebook.entity.User;
+import com.oranbyte.recipebook.enums.ReactionType;
 import com.oranbyte.recipebook.mapper.RecipeMapper;
 import com.oranbyte.recipebook.mapper.UserMapper;
 import com.oranbyte.recipebook.service.CategoryService;
 import com.oranbyte.recipebook.service.IngredientService;
 import com.oranbyte.recipebook.service.PaginationService;
 import com.oranbyte.recipebook.service.RecipeImageService;
+import com.oranbyte.recipebook.service.RecipeReactionService;
 import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.service.TagService;
 import com.oranbyte.recipebook.service.UnitService;
@@ -74,6 +76,9 @@ public class RecipeController {
 	
 	@Autowired
 	private PaginationService paginationService;
+	
+	@Autowired
+	private RecipeReactionService recipeReactionService;
 
 	@GetMapping
 	public String index(
@@ -158,8 +163,11 @@ public class RecipeController {
 
 	@GetMapping("/{recipe}")
 	public String show(@PathVariable Recipe recipe, Model model) {
+		
+		long likeCount = recipeReactionService.getLikeCount(recipe);
+		User recipeUser = recipe.getUser();
 		model.addAttribute("recipe", RecipeMapper.toDto(recipe));
-		model.addAttribute("user", UserMapper.toDto(recipe.getUser()));
+		model.addAttribute("user", UserMapper.toDto(recipeUser));
 		model.addAttribute("comment_dto", CommentDto.builder().recipeId(recipe.getId()).build());
 		model.addAttribute("user_detail", userDetailService.getUserDetailDto(recipe.getUser().getId()));
 		model.addAttribute("user_social_links", userSocialLinksService.getUserSocialLinks(recipe.getUser().getId()));
@@ -167,7 +175,17 @@ public class RecipeController {
 
 		model.addAttribute("tags", recipe.getTags());
 		model.addAttribute("recent_recipies", recipeService.recentRecipes(PageRequest.of(0, 3)));
+		
+		User loginUser = userService.getLoginUser();
+		boolean isLiked = recipeReactionService.isReacted(loginUser, recipe, ReactionType.LIKE);
+		boolean isDisliked = recipeReactionService.isReacted(loginUser, recipe, ReactionType.DISLIKE);
 
+		model.addAttribute("isLiked", isLiked);
+		model.addAttribute("likeCount", likeCount == 0 ? "Like" : likeCount);
+		model.addAttribute("isDisliked", isDisliked);
+		
+		model.addAttribute("isFollowing", recipeUser.isFollowedBy(loginUser));
+		
 		model.addAttribute("categories", categoryService.getAllCategories());
 		return "recipes/recipe-details";
 	}

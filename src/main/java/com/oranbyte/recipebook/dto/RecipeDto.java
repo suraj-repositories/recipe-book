@@ -46,4 +46,6 @@ public class RecipeDto {
 	
 	private LocalDateTime createdAt;
 	
+	private long likeCount;
+	
 }

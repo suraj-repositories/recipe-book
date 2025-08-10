@@ -95,10 +95,14 @@ function enableIngredientManagement() {
 
 	const ingredientSet = new Set();
 
-	container.querySelectorAll(".ingredient").forEach(div => {
-		const name = div.querySelector("input[name='ingredient_names[]']").value.trim();
-		if (name) ingredientSet.add(name.toLowerCase());
-	});
+	const ingredients = container.querySelectorAll(".ingredient")
+
+	if (ingredients) {
+		ingredients.forEach(div => {
+			const name = div.querySelector("input[name='ingredient_names[]']").value.trim();
+			if (name) ingredientSet.add(name.toLowerCase());
+		});
+	}
 
 	function createIngredientElement(name, qty, unit, note, unit_id) {
 
@@ -123,7 +127,7 @@ function enableIngredientManagement() {
 
 		const unitDiv = document.createElement("div");
 		unitDiv.className = "unit";
-		unitDiv.textContent = " " +  unit;
+		unitDiv.textContent = " " + unit;
 
 		const nameHidden = document.createElement("input");
 		nameHidden.type = "hidden";

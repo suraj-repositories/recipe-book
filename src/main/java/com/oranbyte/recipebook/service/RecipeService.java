@@ -1,6 +1,7 @@
 package com.oranbyte.recipebook.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,8 @@ public interface RecipeService {
 	Page<RecipeDto> searchRecipes(Long userId, Long categoryId, Long tagId, String title, String difficulty, Pageable pageable);
 	
 	int getRecipeCount(Long userid);
+	
+	Optional<Recipe> getRecipe(Long id);
 
 	
 }
