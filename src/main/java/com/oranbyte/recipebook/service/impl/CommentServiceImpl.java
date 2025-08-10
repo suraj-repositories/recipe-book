@@ -3,21 +3,25 @@ package com.oranbyte.recipebook.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.oranbyte.recipebook.dto.CommentDto;
 import com.oranbyte.recipebook.entity.Comment;
 import com.oranbyte.recipebook.entity.Recipe;
+import com.oranbyte.recipebook.mapper.CommentMapper;
 import com.oranbyte.recipebook.repository.CommentRepository;
 import com.oranbyte.recipebook.service.CommentService;
+import com.oranbyte.recipebook.specification.CommentSpecification;
 
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
 	@Autowired
 	private CommentRepository commentRepository;
-	
-	
+
 	@Override
 	public Comment save(Comment comment) {
 		return commentRepository.save(comment);
@@ -27,6 +31,14 @@ public class CommentServiceImpl implements CommentService{
 	public List<CommentDto> getComments(Recipe recipe) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Page<CommentDto> searchComments(String userName, String recipeTitle, Pageable pageable) {
+		Specification<Comment> spec = CommentSpecification.hasUserName(userName)
+				.and(CommentSpecification.hasRecipeTitle(recipeTitle));
+
+		return commentRepository.findAll(spec, pageable).map(CommentMapper::toDto);
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.User;
@@ -49,6 +50,11 @@ public class MyRecipeSettings {
 		int pageIndex = Math.max(page - 1, 0);
 		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<RecipeDto> recipePage = recipeService.searchRecipes(user.getId(), categoryId, tagId, title, difficulty, pageable);
+		
+		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+	    recipePage.getContent().forEach(recipe -> {
+	        recipe.setShareUrl(baseUrl + "/recipes/" + recipe.getId());
+	    });
 		
 		model.addAttribute("recipes", recipePage.getContent());
 		model.addAllAttributes(paginationService.getPageMetadata(recipePage, page));

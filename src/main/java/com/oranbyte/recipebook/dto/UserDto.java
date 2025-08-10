@@ -33,4 +33,6 @@ public class UserDto {
     private String password;
 	
 	private int recipeCount;
+	private long followers;
+	private long following;
 }

@@ -11,34 +11,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.oranbyte.recipebook.dto.UserDto;
+import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.service.PaginationService;
-import com.oranbyte.recipebook.service.UserService;
+import com.oranbyte.recipebook.service.RecipeService;
 
 @Controller
-@RequestMapping("/settings/users")
-public class UserController {
+@RequestMapping("/settings/recipes")
+public class RecipeSettingsController {
+	
 
 	@Autowired
-	private UserService userService;
+	private RecipeService recipeService;
 	
 	@Autowired
 	private PaginationService paginationService;
+	
 
 	@GetMapping
-	public String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(required = false) String search, Model model) {
-
+	public String index(
+			Model model,
+			@RequestParam(defaultValue = "1") int page, 
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) Long categoryId, 
+			@RequestParam(required = false) Long tagId,
+			@RequestParam(required = false) String title,
+			@RequestParam(required = false) String difficulty
+	) {
 		int pageIndex = Math.max(page - 1, 0);
-
 		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<UserDto> users = userService.searchUsers(search, pageable);
-
-		model.addAttribute("users", users.getContent());
-		model.addAllAttributes(paginationService.getPageMetadata(users, page));
+		Page<RecipeDto> recipePage = recipeService.searchRecipes(categoryId, tagId, title, difficulty, pageable);
+		
+		model.addAttribute("recipes", recipePage.getContent());
+		model.addAllAttributes(paginationService.getPageMetadata(recipePage, page));
 		model.addAttribute("currentPageDisplay", page);
-
-		return "settings/users-list";
+		return "settings/recipe-list";
 	}
-
+	
 }

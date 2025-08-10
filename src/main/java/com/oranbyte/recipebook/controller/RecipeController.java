@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -188,6 +189,17 @@ public class RecipeController {
 		
 		model.addAttribute("categories", categoryService.getAllCategories());
 		return "recipes/recipe-details";
+	}
+	
+	@DeleteMapping("{recipe}/delete")
+	public String destroy(@PathVariable Recipe recipe, Model model, RedirectAttributes redirectAttr, HttpServletRequest request) {
+		try {
+			recipeService.deleteRecipe(recipe);
+			redirectAttr.addFlashAttribute("success", "Recipe Delete Successfully!");
+		}catch(Exception e) {
+			redirectAttr.addFlashAttribute("error", e.getMessage());
+		}
+		return "redirect:" + request.getHeader("Referer");
 	}
 
 }

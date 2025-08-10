@@ -19,8 +19,10 @@ public class CommentDto {
 	private Long id;
 	private String message;
 	private Long recipeId;
+	
 	private CommentDto parent;
 	private UserDto user;
+	private RecipeDto recipe;
 	private List<CommentDto> replies;
 	private LocalDateTime createdAt;
 	

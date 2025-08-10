@@ -31,5 +31,6 @@ public interface RecipeService {
 	
 	Optional<Recipe> getRecipe(Long id);
 
+	void deleteRecipe(Recipe recipe);
 	
 }

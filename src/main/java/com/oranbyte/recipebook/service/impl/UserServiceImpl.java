@@ -3,6 +3,9 @@ package com.oranbyte.recipebook.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,7 @@ import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.mapper.UserMapper;
 import com.oranbyte.recipebook.repository.UserRepository;
 import com.oranbyte.recipebook.service.UserService;
+import com.oranbyte.recipebook.specification.UserSpecification;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -74,6 +78,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUser(Long id) {
 		return userRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public Page<UserDto> searchUsers(String search, Pageable pageable) {
+		Specification<User> spec = UserSpecification.hasNameLike(search)
+		.and(UserSpecification.hasUsernameLike(search))
+		.and(UserSpecification.hasEmailLike(search));
+		
+		return userRepository.findAll(spec, pageable).map(UserMapper::toDto);
 	}
 
 

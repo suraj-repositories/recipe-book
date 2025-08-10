@@ -48,4 +48,6 @@ public class RecipeDto {
 	
 	private long likeCount;
 	
+	private String shareUrl;
+	
 }

@@ -11,34 +11,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.oranbyte.recipebook.dto.UserDto;
+import com.oranbyte.recipebook.dto.CommentDto;
+import com.oranbyte.recipebook.service.CommentService;
 import com.oranbyte.recipebook.service.PaginationService;
-import com.oranbyte.recipebook.service.UserService;
 
 @Controller
-@RequestMapping("/settings/users")
-public class UserController {
-
+@RequestMapping("/settings/comments")
+public class CommentSettingsController {
+	
 	@Autowired
-	private UserService userService;
+	private CommentService commentService;
+	
 	
 	@Autowired
 	private PaginationService paginationService;
 
 	@GetMapping
-	public String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(required = false) String search, Model model) {
-
+	public String index(
+			Model model,
+			@RequestParam(defaultValue = "1") int page, 
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) String search
+		) {
+		
 		int pageIndex = Math.max(page - 1, 0);
-
 		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<UserDto> users = userService.searchUsers(search, pageable);
-
-		model.addAttribute("users", users.getContent());
-		model.addAllAttributes(paginationService.getPageMetadata(users, page));
+		Page<CommentDto> commentPage = commentService.searchComments(search, search, pageable);
+		
+		model.addAttribute("comments", commentPage.getContent());
+		model.addAllAttributes(paginationService.getPageMetadata(commentPage, page));
 		model.addAttribute("currentPageDisplay", page);
-
-		return "settings/users-list";
+		
+		return "settings/comment-list";
 	}
-
+	
+	
 }

@@ -12,12 +12,13 @@ public class CommentMapper {
 	            .message(comment.getMessage())
 	            .createdAt(comment.getCreatedAt())
 	            .user(UserMapper.toDto(comment.getUser()))
+	            .recipe(RecipeMapper.toDto(comment.getRecipe()))
 	            .parent(comment.getParent() != null ? toShallowDto(comment.getParent()) : null)
 	            .replies(comment.getReplies() != null
-	                    ? comment.getReplies().stream()
-	                        .map(CommentMapper::toDto)
-	                        .toList()
-	                    : List.of())
+		            ? comment.getReplies().stream()
+		                .map(CommentMapper::toShallowDto)
+		                .toList()
+		            : List.of())
 	            .build();
 	}
 

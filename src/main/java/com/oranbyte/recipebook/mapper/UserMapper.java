@@ -35,6 +35,10 @@ public class UserMapper {
 					        Map.Entry::getValue,
 					        (existing, replacement) -> replacement
 					    )))
+				.followers(
+						user.getFollowers().size()
+						)
+				.following(user.getFollowing().size())
 				.build();
 	}
 	

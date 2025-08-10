@@ -1335,6 +1335,18 @@ mark {
 .widget-search input::-moz-placeholder {
 	font-size: 90%;
 }
+.share-options .social-media-icons{
+	gap: 10px !important; 
+}
+.share-options .social-media-icons a{
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+}
 
 .widget-search input::placeholder {
 	font-size: 90%;
@@ -1523,6 +1535,15 @@ mark {
 
 .error-shape-3 .path {
 	fill: #4FD675;
+}
+.modal .modal-title{
+	font-size: 20px;
+}
+.modal .modal-header button{
+	    border: none;
+    background: none;
+    color: #ff5b5b;
+	
 }
 
 .footer {
@@ -1945,6 +1966,11 @@ mark {
 	border-radius: 50%;
 }
 
+.users-list .image-box img {
+	width: 55px;
+	max-width: unset;
+}
+
 .like-dislike {
 	height: 20px;
 }
@@ -2012,6 +2038,19 @@ mark {
 	margin-left: 260px;
 	padding: 20px;
 	margin-bottom: 50px;
+}
+
+.user-dashboard .recipe-image-box {
+	padding: 3px;
+	border: 1px dashed #ff9d6f;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.user-dashboard .recipe-image-box img{
+	max-width: 130px;
+	max-height: 130px;
 }
 
 @media (max-width: 767px) {
@@ -2252,11 +2291,12 @@ mark {
 	min-width: 300px;
 }
 
-.follow-btn{
+.follow-btn {
 	background-color: #f0f0f0;
 	border: 1px solid #e6e6e6;
-	color: #1c1c1c;	
+	color: #1c1c1c;
 }
+
 .user-profile-detail .follow-btn {
 	border-radius: 30px;
 	font-size: 14px;
@@ -2268,12 +2308,14 @@ mark {
 	background-color: #565656;
 	color: white;
 }
+
 .follow-btn.active {
 	background-color: #4fd675;
 	color: white;
-	border-color:#e2e2e28c;
+	border-color: #e2e2e28c;
 }
-.widget-about .follow-btn:not(.active){
+
+.widget-about .follow-btn:not(.active) {
 	padding-left: 30px;
 	padding-right: 30px;
 }
@@ -2512,5 +2554,6 @@ mark {
 .user-dashboard .content ul li {
 	padding-left: 0px;
 }
+
 
 /* END - dashboard */

@@ -4,9 +4,7 @@
 <th:block th:replace="~{/settings/partials/header :: header}"></th:block>
 
 <div class="content my-recipes px-0 px-sm-4">
-	<th:block th:replace="~{/fragments/alert :: alert}"></th:block>
-
-	<h3>My Recipes</h3>
+	<h3>All Recipes</h3>
 	<hr class="mt-0 mb-3">
 
 	<div class="table-responsive">
@@ -23,15 +21,13 @@
 			</thead>
 			<tbody>
 				<tr th:each="recipe, iterStat  : ${recipes}">
-					<th th:text="${firstItemIndex + iterStat.index + 1}"></th>
+					 <th th:text="${firstItemIndex + iterStat.index + 1}"></th>
 					<td>
-						<div class="recipe-image-box">
-							<img th:src="${recipe.primaryImage}" alt="recipe-image">
-						</div>
+						<img th:src="${recipe.primaryImage}" class="recipe-image img-fluid" alt="recipe-image"
+							style="max-width: 100px;">
 					</td>
 					<td>
-						<a class="post-title" th:href="@{/recipes/{id}(id=${recipe.id})}"
-							th:text="${@stringUtil.truncate(recipe.title, 40)}">Recipe
+						<a class="post-title" th:href="@{'/recipes/' + ${recipe.id}}" th:text="${@stringUtil.truncate(recipe.title, 40)}">Recipe
 							Title</a>
 					</td>
 					<td>
@@ -76,17 +72,15 @@
 					</td>
 					<td>
 						<div class="action-btns">
-							<button class="more" data-bs-toggle="modal" data-bs-target="#recipeDetailModal">
+							<button class="more">
 								<i class="ti-info-alt"></i>
 							</button>
-							<button class="share" data-share-title="Share Recipe" th:data-share-url="${recipe.shareUrl}" data-share-message="Share this recipe with your friends">
+							<button class="share">
 								<i class="ti-share"></i>
 							</button>
-							<form th:action="@{/recipes/{id}/delete(id=${recipe.id})}" method="post" th:method="delete">
-								<button class="delete">
-									<i class="ti-trash"></i>
-								</button>
-							</form>
+							<button class="delete ">
+								<i class="ti-trash"></i>
+							</button>
 						</div>
 					</td>
 				</tr>
@@ -96,28 +90,10 @@
 
 	<th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
 
-	<div class="modal fade" id="recipeDetailModal" tabindex="-1" aria-labelledby="recipeDetailModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title">Recipe Info</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-						<i class="ti-close"></i>
-					</button>
-				</div>
-				<div class="modal-body">
-					...
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 
 </div>
 
-<th:block th:replace="~{/fragments/share-modal :: share-modal}"></th:block>
+
 
 <th:block th:replace="~{/settings/partials/footer :: footer}"></th:block>

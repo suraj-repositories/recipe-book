@@ -2,6 +2,9 @@ package com.oranbyte.recipebook.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.oranbyte.recipebook.dto.UserDto;
 import com.oranbyte.recipebook.entity.User;
 
@@ -23,5 +26,6 @@ public interface UserService {
 	boolean existsByEmail(String email);
 	
 	User getLoginUser();
-	
+
+	Page<UserDto> searchUsers(String search, Pageable pageable);
 }

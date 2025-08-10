@@ -192,6 +192,7 @@ $(window).on('load', function() {
 document.addEventListener('DOMContentLoaded', () => {
 	enableSidebarToggle("#sidebar-toggle");
 	enableFollowFeature("#follow-btn");
+	enableShareFeature();
 });
 
 function enableSidebarToggle(elementSelector) {
@@ -264,4 +265,61 @@ function enableFollowFeature(selector) {
 				}
 			});
 	});
+}
+function enableShareFeature() {
+    const shareables = document.querySelectorAll("button[data-share-url]:not([data-share-url=''])");
+
+    if (!shareables.length) return;
+
+    const shareModal = document.querySelector("#shareModal");
+    if (!shareModal) return;
+
+    shareables.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const url = btn.getAttribute('data-share-url');
+            const title = btn.getAttribute('data-share-title');
+            const message = btn.getAttribute('data-share-message');
+
+            shareModal.querySelector(".modal-title").textContent = title || "Share";
+            shareModal.querySelector(".share-message").textContent = message || "Share with your friends";
+            shareModal.querySelector("input[type='text']").value = url;
+
+            // Facebook
+            shareModal.querySelector(".ti-facebook").parentElement.href =
+                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+
+            // Pinterest
+            const pinterestIcon = shareModal.querySelector(".ti-pinterest")?.parentElement;
+            if (pinterestIcon) {
+                pinterestIcon.href =
+                    `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title || '')}`;
+            }
+
+            // WhatsApp
+            const whatsappIcon = shareModal.querySelector("svg")?.parentElement;
+            if (whatsappIcon) {
+                whatsappIcon.href =
+                    `https://api.whatsapp.com/send?text=${encodeURIComponent(title || '')}%20${encodeURIComponent(url)}`;
+            }
+
+            // Email
+            const emailIcon = shareModal.querySelector(".ti-email")?.parentElement;
+            if (emailIcon) {
+                emailIcon.href =
+                    `mailto:?subject=${encodeURIComponent(title || 'Check this out')}&body=${encodeURIComponent(url)}`;
+            }
+            
+            shareModal.querySelector("#copyLinkBtn").addEventListener("click", () => {
+		        navigator.clipboard.writeText(url).then(() => {
+		            const btn = shareModal.querySelector("#copyLinkBtn");
+		            btn.innerHTML = 'Copied!';
+		            setTimeout(() => btn.innerHTML = 'Copy', 1500);
+		        });
+		    });
+
+            $("#shareModal").modal("show");
+        });
+    });
 }

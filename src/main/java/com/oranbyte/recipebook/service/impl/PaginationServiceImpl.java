@@ -26,10 +26,12 @@ public class PaginationServiceImpl implements PaginationService {
 	        startPage = Math.max(0, endPage - maxVisiblePages + 1);
 	    }
 	    
+	    int size = page.getSize();
 	    map.put("currentPage", currentPageNo + 1);
 	    map.put("totalPages", totalPages);
 	    map.put("startPage", startPage + 1);
 	    map.put("endPage", endPage + 1);
+	    map.put("firstItemIndex", currentPageNo * size - size);
 
 	    return map;
 	}

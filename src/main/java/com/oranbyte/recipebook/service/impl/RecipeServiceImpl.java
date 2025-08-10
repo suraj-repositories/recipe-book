@@ -123,6 +123,11 @@ public class RecipeServiceImpl implements RecipeService{
 		return recipeRepository.findById(id);
 	}
 
+	@Override
+	public void deleteRecipe(Recipe recipe) {
+		recipeRepository.deleteById(recipe.getId());
+	}
+
 
 	
 }
