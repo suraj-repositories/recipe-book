@@ -2,6 +2,7 @@ window.onload = () => {
 	enableTagSelection();
 	enableIngredientManagement();
 	enableNumberInputOnText();
+	enableImageSelection("#recipeImageBox");
 };
 
 function enableTagSelection() {
@@ -68,11 +69,15 @@ function enableTagSelection() {
 		}
 	});
 
+	console.log('here');
 	document.querySelectorAll(".tag-box .tag").forEach(tagDiv => {
+
 		const text = tagDiv.textContent.replace('×', '').trim();
 		const closeBtn = tagDiv.querySelector('span');
 		if (closeBtn) {
+			console.log('close btn');
 			closeBtn.addEventListener("click", () => {
+				console.log('added listener');
 				tags.delete(text);
 				tagDiv.remove();
 
@@ -222,3 +227,70 @@ function enableNumberInputOnText() {
 		});
 	});
 }
+
+function enableImageSelection(recipeImageBoxSelector) {
+	const recipeImageBox = document.querySelector(recipeImageBoxSelector);
+	const parentForm = document.querySelector("#recipeForm");
+	const imageInput = document.querySelector("#recipeImages");
+
+	if (!recipeImageBox || !parentForm || !imageInput) return;
+
+	// deleting from db
+	const deleteBtns = recipeImageBox.querySelectorAll(".recipe-image button");
+	if(deleteBtns){
+		deleteBtns.forEach(btn =>{
+			btn.addEventListener('click', ()=>{
+				btn.closest(".recipe-image").remove();
+			});
+			
+		});
+	}
+
+	// multipart file upload
+
+	let selectedFiles = [];
+	
+	imageInput.addEventListener("change", () => {
+		const files = Array.from(imageInput.files);
+		if (!files.length) return;
+
+		files.forEach(file => {
+			selectedFiles.push(file);
+			recipeImageBox.appendChild(createImageBox(file));
+		});
+
+		imageInput.value = "";
+	});
+
+	function createImageBox(file) {
+		const imageBox = document.createElement("div");
+		imageBox.classList.add("recipe-image");
+
+		const img = document.createElement("img");
+		img.alt = "Picked recipe Image";
+		const reader = new FileReader();
+		reader.onload = e => img.src = e.target.result;
+		reader.readAsDataURL(file);
+
+		const deleteBtn = document.createElement("button");
+		deleteBtn.type = "button";
+		deleteBtn.classList.add("recipe-image-delete-btn");
+		deleteBtn.innerHTML = `<i class="ti-trash"></i>`;
+
+		deleteBtn.addEventListener("click", () => {
+			selectedFiles = selectedFiles.filter(f => f !== file);
+			imageBox.remove();
+		});
+
+		imageBox.append(img, deleteBtn);
+		return imageBox;
+	}
+
+	parentForm.addEventListener("submit", e => {
+		const dataTransfer = new DataTransfer();
+		selectedFiles.forEach(file => dataTransfer.items.add(file));
+		imageInput.files = dataTransfer.files;
+	});
+}
+
+

@@ -8,5 +8,12 @@ public class StringUtil {
         if (str == null) return null;
         return str.length() > length ? str.substring(0, length) + "..." : str;
     }
+    
+    public boolean isEmpty(String str) {
+    	if (str == null) return true;
+    	return str.trim().equals("");
+    }
+    
+    
 }
 

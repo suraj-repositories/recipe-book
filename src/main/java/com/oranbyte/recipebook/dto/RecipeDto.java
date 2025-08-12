@@ -34,10 +34,13 @@ public class RecipeDto {
 	private String difficulty;
 
 	private Long userId;
+	
 	private String userName;
+	
 	private String userImage;
 
 	private Long categoryId;
+	
 	private String categoryName;
 
 	private String primaryImage;
@@ -47,6 +50,10 @@ public class RecipeDto {
 	private LocalDateTime createdAt;
 	
 	private long likeCount;
+	
+	private long dislikeCount;
+	
+	private long commentCount;
 	
 	private String shareUrl;
 	

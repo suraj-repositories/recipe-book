@@ -17,6 +17,8 @@ public interface RecipeService {
 	
 	Recipe convertToEntity(RecipeDto dto, User user);
 	
+	void updateEntityFromDto(Recipe existingRecipe, RecipeDto dto, User user);
+	
 	List<RecipeDto> getLast20Recipes(); 
 	
 	Page<RecipeDto> getAllRecipes(Pageable pageable);
@@ -32,5 +34,7 @@ public interface RecipeService {
 	Optional<Recipe> getRecipe(Long id);
 
 	void deleteRecipe(Recipe recipe);
+	
+	Optional<Recipe> getRecipeByIdAndUser(Long id, User user);
 	
 }

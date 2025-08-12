@@ -17,4 +17,6 @@ public interface CommentService {
 	
 	Page<CommentDto> searchComments(String userName, String recipeTitle, Pageable pageable);
 	
+	long getCommentCount(Long recipeId);
+	
 }

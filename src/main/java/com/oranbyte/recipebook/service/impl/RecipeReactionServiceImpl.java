@@ -55,4 +55,14 @@ public class RecipeReactionServiceImpl implements RecipeReactionService{
 	            .orElse(false);
 	}
 
+	@Override
+	public long getLikeCount(long recipeId) {
+		return recipeReactionRepository.countByRecipeIdAndReactionType(recipeId, ReactionType.LIKE);
+	}
+
+	@Override
+	public long getDislikeCount(long recipeId) {
+		return recipeReactionRepository.countByRecipeIdAndReactionType(recipeId, ReactionType.DISLIKE);
+	}
+
 }

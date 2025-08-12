@@ -41,4 +41,9 @@ public class CommentServiceImpl implements CommentService {
 		return commentRepository.findAll(spec, pageable).map(CommentMapper::toDto);
 	}
 
+	@Override
+	public long getCommentCount(Long recipeId) {
+		return commentRepository.countByRecipeId(recipeId);
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.oranbyte.recipebook.controller;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -24,10 +25,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.oranbyte.recipebook.dto.CategoryDto;
 import com.oranbyte.recipebook.dto.CommentDto;
 import com.oranbyte.recipebook.dto.RecipeDto;
+import com.oranbyte.recipebook.dto.RecipeIngredientDto;
 import com.oranbyte.recipebook.entity.Recipe;
 import com.oranbyte.recipebook.entity.Tag;
 import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.enums.ReactionType;
+import com.oranbyte.recipebook.mapper.RecipeIngredientMapper;
 import com.oranbyte.recipebook.mapper.RecipeMapper;
 import com.oranbyte.recipebook.mapper.UserMapper;
 import com.oranbyte.recipebook.service.CategoryService;
@@ -123,7 +126,7 @@ public class RecipeController {
 	}
 
 	@PostMapping("/save")
-	public String saveRecipe(@ModelAttribute RecipeDto recipeDto,
+	public String save(@ModelAttribute RecipeDto recipeDto,
 			@RequestParam(value = "images", required = false) MultipartFile[] images,
 			@RequestParam(value = "tags", required = false) String[] tags,
 			@RequestParam(value = "ingredient_names", required = false) String[] ingredientNames,
@@ -201,5 +204,70 @@ public class RecipeController {
 		}
 		return "redirect:" + request.getHeader("Referer");
 	}
+	
+	@GetMapping("/{recipe}/edit")
+	public String edit(@PathVariable Recipe recipe, Model model) {
+		model.addAttribute("units", unitService.getAll());
+		model.addAttribute("categories", categoryService.getAllCategories());
+		
+		RecipeDto dto = RecipeMapper.toDto(recipe);
+		
+		Set<Tag> tags = recipe.getTags();
+		List<RecipeIngredientDto> ingredients = recipe.getIngredients().stream().map(RecipeIngredientMapper::toDto).toList();
+		
+		System.out.println(ingredients.getFirst());
+		model.addAttribute("recipeDto", dto);
+		model.addAttribute("tags", tags);
+		model.addAttribute("ingredients", ingredients);
+		return "recipes/edit-recipe";
+	}
+	
+	@PostMapping("/{id}/update")
+	public String update(@PathVariable Long id,
+	        @ModelAttribute RecipeDto recipeDto,
+	        @RequestParam(value = "images", required = false) MultipartFile[] images,
+	        @RequestParam(value = "tags", required = false) String[] tags,
+	        @RequestParam(value = "ingredient_names", required = false) String[] ingredientNames,
+	        @RequestParam(value = "ingredient_quantities", required = false) Integer[] ingredientQuantities,
+	        @RequestParam(value = "ingredient_units", required = false) Long[] ingredientUnitIds,
+	        @RequestParam(value = "ingredient_notes", required = false) String[] ingredientNotes,
+	        RedirectAttributes redirectAttr, Principal principal, HttpServletRequest request) {
+
+	    try {
+	        User user = userService.getUser(principal.getName());
+	        
+	        Recipe existingRecipe = recipeService.getRecipeByIdAndUser(id, user)
+	                .orElseThrow(() -> new RuntimeException("Recipe not found or access denied"));
+
+	        recipeService.updateEntityFromDto(existingRecipe, recipeDto, user);
+
+	        if (tags != null && tags.length > 0) {
+	            Set<Tag> savedTags = tagService.saveAll(tags);
+	            existingRecipe.setTags(savedTags);
+	        } else {
+	            existingRecipe.setTags(Collections.emptySet());
+	        }
+
+	        ingredientService.deleteByRecipe(existingRecipe);
+	        if (ingredientNames != null && ingredientNames.length > 0) {
+	            ingredientService.saveRecipeIngredients(existingRecipe, ingredientNames, ingredientQuantities,
+	                    ingredientUnitIds, ingredientNotes);
+	        }
+
+	        if (images != null && images.length > 0) {
+	            recipeImageService.saveAll(existingRecipe, images);
+	        }
+
+	        recipeService.saveRecipe(existingRecipe);
+
+	        redirectAttr.addFlashAttribute("success", "Your recipe updated successfully!");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttr.addFlashAttribute("error", e.getMessage());
+	    }
+
+	    return "redirect:" + request.getHeader("Referer");
+	}
+
 
 }

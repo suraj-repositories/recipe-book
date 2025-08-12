@@ -6,13 +6,14 @@
 
 		<section class="section-sm pt-0">
 			<div class="container">
-				<form th:action="@{/recipes/save}" method="post" enctype="multipart/form-data" th:object="${recipeDto}">
+				<form
+					th:action="${recipeDto.id != null} ? @{/recipes/{id}/update(id=${recipeDto.id})} : @{/recipes/save}"
+					method="post" enctype="multipart/form-data" th:object="${recipeDto}" id="recipeForm">
 					<input type="hidden" th:field="*{id}" />
+
 					<div class="row">
 						<div class="col-lg-9 mx-auto">
 							<th:block th:replace="~{/fragments/alert :: alert}"></th:block>
-
-
 							<div class="form-group">
 								<label for="title">Title (Required)</label>
 								<input type="text" th:field="*{title}" id="title" class="form-control" required />
@@ -75,7 +76,17 @@
 
 							<div class="form-group">
 								<label for="images">Upload Images</label>
-								<input type="file" name="images" id="images" class="form-control" multiple />
+								<input type="file" name="images" id="recipeImages" class="form-control" accept=".jpg, .png, .jpeg, .svg, .avif, .webp, .gif" multiple />
+
+								<div class="recipe-image-box" id="recipeImageBox">
+									<div class="recipe-image" th:if="${recipeDto.imagesDtos != null}"
+										th:each="imageDto : ${recipeDto.imagesDtos}">
+										<img th:src="@{${imageDto.imagePath}}" alt="recipe-image" >
+										<button type="button" class="recipe-image-delete-btn">
+											<i class="ti-trash"></i>
+										</button>
+									</div>
+								</div>
 							</div>
 
 
@@ -90,27 +101,31 @@
 									data-bs-target="#ingredientModal">
 									<i class="ti-plus"></i> Add Ingredients
 								</button>
-								
+
 								<!-- Ingredient list -->
 								<div class="ingredients-box">
-								</div>
-								<!--
-									<div class="ingredient">
-										<div class="name">Coriander Powder</div>
-										<input type="hidden" value="Coriander Powder" name="ingredient_names[]" />
 
-										<div class="qty">100</div>
-										<input type="hidden" name="ingredient_quantities[]" />
+									<div class="ingredient" th:if="${ingredients != null}"
+										th:each="ingredient : ${ingredients}">
+										<div class="name" th:text="${ingredient.name}">...</div>
+										<input type="hidden" th:value="${ingredient.name}" name="ingredient_names[]" />
 
-										<div class="unit">g</div>
-										<input type="hidden" name="ingredient_units[]" />
+										<div class="qty" th:text="${ingredient.quantity}"></div>
+										<input type="hidden" th:value="${ingredient.quantity}"
+											name="ingredient_quantities[]" />
 
-										<input type="hidden" name="ingredient_notes[]" value="100g" />
+										<div class="unit"
+											th:text="${@stringUtil.isEmpty(ingredient.unit) ? ingredient.note : ingredient.unit}">
+											g</div>
+										<input type="hidden" th:value="${ingredient.unitId}" name="ingredient_units[]" />
+
+										<input type="hidden" th:value="${ingredient.note}" name="ingredient_notes[]"
+											value="100g" />
 
 										<span class="remove">&times;</span>
 									</div>
-								-->
 
+								</div>
 							</div>
 
 
@@ -123,14 +138,13 @@
 									</button>
 
 									<div class="tag-box">
-									</div>
-									<!--
-										<div class="tag">
-											Tag Name
-											<input type="hidden" value="Indian" name="tags[]">
+										<div class="tag" th:if="${tags != null}" th:each="tag: ${tags}">
+											<th:block th:text="${tag.name}"></th:block>
+											<input type="hidden" th:value="${tag.name}" name="tags[]">
 											<span class="remove">&times;</span>
 										</div>
-									-->
+									</div>
+
 								</div>
 							</div>
 
@@ -151,6 +165,9 @@
 					<div class="modal-header">
 						<h5 class="modal-title" id="ingredientModalLabel">Add Ingredient to Your
 							Recipe</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+														<i class="ti-close"></i>
+													</button>
 					</div>
 					<div class="modal-body">
 
@@ -173,9 +190,10 @@
 								<label for="ingredientUnit"><strong>Unit of
 										Measure</strong></label>
 
-								<select class="form-select" id="ingredientUnit" >
+								<select class="form-select" id="ingredientUnit">
 									<option selected disabled value="">e.g., grams, tsp, cups</option>
-									<option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+									<option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}">
+									</option>
 								</select>
 
 							</div>
@@ -194,7 +212,6 @@
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 						<button id="addIngredientBtn" type="button" class="btn btn-primary">Add
 							Ingredient</button>
 					</div>
@@ -209,6 +226,9 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="tagModalLabel">Manage Tags</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+													<i class="ti-close"></i>
+												</button>
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
@@ -216,17 +236,14 @@
 							<input type="text" id="tagTitle" class="form-control" required />
 						</div>
 						<div class="tag-box">
-							<!--
-							<div class="tag">
-								Indian
-								<input type="hidden" value="Indian" name="tags[]">
+							<div class="tag" th:if="${tags != null}" th:each="tag: ${tags}">
+								<th:block th:text="${tag.name}"></th:block>
+								<input type="hidden" th:value="${tag.name}" name="tags[]">
 								<span class="remove">&times;</span>
 							</div>
-							-->
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						<button id="addTagBtn" type="button" class="btn btn-primary">Add
 							Tag</button>
 					</div>

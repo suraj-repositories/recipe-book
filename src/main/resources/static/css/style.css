@@ -1335,10 +1335,12 @@ mark {
 .widget-search input::-moz-placeholder {
 	font-size: 90%;
 }
-.share-options .social-media-icons{
-	gap: 10px !important; 
+
+.share-options .social-media-icons {
+	gap: 10px !important;
 }
-.share-options .social-media-icons a{
+
+.share-options .social-media-icons a {
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -1536,14 +1538,16 @@ mark {
 .error-shape-3 .path {
 	fill: #4FD675;
 }
-.modal .modal-title{
+
+.modal .modal-title {
 	font-size: 20px;
 }
-.modal .modal-header button{
-	    border: none;
-    background: none;
-    color: #ff5b5b;
-	
+
+.modal .modal-header button {
+	border: none;
+	background: none;
+	color: #ff5b5b;
+
 }
 
 .footer {
@@ -2048,7 +2052,8 @@ mark {
 	align-items: center;
 	justify-content: center;
 }
-.user-dashboard .recipe-image-box img{
+
+.user-dashboard .recipe-image-box img {
 	max-width: 130px;
 	max-height: 130px;
 }
@@ -2510,7 +2515,8 @@ mark {
 	list-style-type: none;
 }
 
-.user-dashboard table td button {
+.user-dashboard table td button,
+.user-dashboard table td .action-btns a {
 	width: 30px;
 	height: 30px;
 	display: flex;
@@ -2529,22 +2535,40 @@ mark {
 
 }
 
+.user-dashboard table td .action-btns.grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid: 2 2;
+	gap: 10px;
+	margin: auto;
+	max-width: 65px;
+}
+
 .user-dashboard table td button.delete {
 	border-color: #f1aeb5;
 	color: #58151c;
 	background: #f8d7da;
 }
 
-.user-dashboard table td button.share {
+.user-dashboard table td button.share,
+.user-dashboard table td a.share {
 	border-color: #9ec5fe;
 	color: #052c65;
 	background: #cfe2ff;
 }
 
-.user-dashboard table td button.more {
+.user-dashboard table td button.more,
+.user-dashboard table td a.more {
 	border-color: #c4c8cb;
 	color: #2b2f32;
 	background: #e2e3e5;
+}
+
+.user-dashboard table td button.edit,
+.user-dashboard table td a.edit {
+	border-color: #a3cfbb;
+	color: #0a3622;
+	background: #d1e7dd;
 }
 
 .user-dashboard .content ul li::before {
@@ -2557,3 +2581,39 @@ mark {
 
 
 /* END - dashboard */
+.recipe-image-box {
+	display: flex;
+	align-items: center;
+	margin-top: 20px;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.recipe-image-box .recipe-image {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px dashed #2ec458;
+	padding: 3px;
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.recipe-image-box .recipe-image img {
+	width: 100%;
+}
+
+.recipe-image-box .recipe-image button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 25px;
+	width: 25px;
+	border: 1px solid #f1aeb5;
+	color: #58151c;
+	background: #f8d7da;
+}

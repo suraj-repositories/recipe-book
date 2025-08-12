@@ -6,4 +6,6 @@ public interface IngredientService {
 
 	void saveRecipeIngredients(Recipe recipe, String[] names, Integer[] quantities, Long[] unitIds, String[] notes);
 
+	void deleteByRecipe(Recipe recipe);
+	
 }

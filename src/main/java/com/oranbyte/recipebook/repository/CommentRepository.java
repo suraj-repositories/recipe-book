@@ -16,4 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpec
 	
 	List<Comment> findByRecipe(Recipe recipe);
 
+	long countByRecipeId(Long recipeId);
+	
 }

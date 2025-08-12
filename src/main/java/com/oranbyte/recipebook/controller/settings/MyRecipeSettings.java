@@ -16,7 +16,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oranbyte.recipebook.dto.RecipeDto;
 import com.oranbyte.recipebook.entity.User;
+import com.oranbyte.recipebook.service.CommentService;
 import com.oranbyte.recipebook.service.PaginationService;
+import com.oranbyte.recipebook.service.RecipeReactionService;
 import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.service.UserService;
 
@@ -32,6 +34,12 @@ public class MyRecipeSettings {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RecipeReactionService recipeReactionService;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	@GetMapping
 	public String index(
@@ -54,6 +62,9 @@ public class MyRecipeSettings {
 		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 	    recipePage.getContent().forEach(recipe -> {
 	        recipe.setShareUrl(baseUrl + "/recipes/" + recipe.getId());
+	        recipe.setLikeCount(recipeReactionService.getLikeCount(recipe.getId()));
+	        recipe.setDislikeCount(recipeReactionService.getDislikeCount(recipe.getId()));
+	        recipe.setCommentCount(commentService.getCommentCount(recipe.getId()));
 	    });
 		
 		model.addAttribute("recipes", recipePage.getContent());

@@ -12,6 +12,10 @@ public interface RecipeReactionService {
 	
 	public long getDislikeCount(Recipe recipe);
 	
+	public long getLikeCount(long recipeId);
+	
+	public long getDislikeCount(long recipeId);
+	
 	public boolean isReacted(User user, Recipe recipe, ReactionType type);
 
 }

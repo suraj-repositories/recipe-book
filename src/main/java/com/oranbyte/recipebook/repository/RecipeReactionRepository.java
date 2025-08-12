@@ -17,4 +17,6 @@ public interface RecipeReactionRepository extends JpaRepository<RecipeReaction, 
 	
 	long countByRecipeAndReactionType(Recipe recipe, ReactionType type);
 	
+	long countByRecipeIdAndReactionType(Long recipeId, ReactionType type);
+	
 }

@@ -70,6 +70,22 @@ public class RecipeServiceImpl implements RecipeService{
 	            .build();
 	}
 
+	@Override
+	public void updateEntityFromDto(Recipe existingRecipe, RecipeDto dto, User user) {
+	    Category category = categoryRepository.findById(dto.getCategoryId())
+	            .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+	    existingRecipe.setTitle(dto.getTitle());
+	    existingRecipe.setDescription(dto.getDescription());
+	    existingRecipe.setInstructions(dto.getInstructions());
+	    existingRecipe.setPrepTime(dto.getPrepTime());
+	    existingRecipe.setCookTime(dto.getCookTime());
+	    existingRecipe.setServings(dto.getServings());
+	    existingRecipe.setDifficulty(dto.getDifficulty());
+	    existingRecipe.setUser(user);
+	    existingRecipe.setCategory(category);
+	}
+
 
 	@Override
 	public List<RecipeDto> getLast20Recipes() {
@@ -126,6 +142,11 @@ public class RecipeServiceImpl implements RecipeService{
 	@Override
 	public void deleteRecipe(Recipe recipe) {
 		recipeRepository.deleteById(recipe.getId());
+	}
+
+	@Override
+	public Optional<Recipe> getRecipeByIdAndUser(Long id, User user) {
+		return recipeRepository.findByIdAndUser(id, user);
 	}
 
 

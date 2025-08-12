@@ -51,7 +51,7 @@
 									</g>
 								</svg>
 
-								<span>200k</span>
+								<span th:text="${recipe.likeCount}"></span>
 							</div>
 							<div class="d-flex align-items-center">
 								<svg class="absolute inset-0 h-full w-full" viewBox="0 0 24 24"
@@ -64,24 +64,32 @@
 									</g>
 								</svg>
 
-								<span>100k</span>
+								<span th:text="${recipe.dislikeCount}">0</span>
 							</div>
 							<div class="d-flex align-items-center">
 								<i class="ti-comment"></i>
 
-								<span>100k</span>
+								<span class="ml-1 fs-6" th:text="${recipe.commentCount}"></span>
 							</div>
 						</div>
 
 					</td>
 					<td>
-						<div class="action-btns">
-							<button class="more" data-bs-toggle="modal" data-bs-target="#recipeDetailModal">
+						<div class="action-btns grid">
+							<button class="more recipe-info" th:data-recipe-difficulty="${recipe.difficulty}"
+								th:data-recipe-servings="${recipe.servings}"
+								th:data-recipe-prep-time="${recipe.prepTime}"
+								th:data-recipe-cook-time="${recipe.cookTime}"
+								th:data-recipe-category="${recipe.categoryName}">
 								<i class="ti-info-alt"></i>
 							</button>
-							<button class="share" data-share-title="Share Recipe" th:data-share-url="${recipe.shareUrl}" data-share-message="Share this recipe with your friends">
+							<button class="share" data-share-title="Share Recipe" th:data-share-url="${recipe.shareUrl}"
+								data-share-message="Share this recipe with your friends">
 								<i class="ti-share"></i>
 							</button>
+							<a th:href="@{/recipes/{id}/edit(id=${recipe.id})}" class="edit">
+								<i class="ti-pencil-alt"></i>
+							</a>
 							<form th:action="@{/recipes/{id}/delete(id=${recipe.id})}" method="post" th:method="delete">
 								<button class="delete">
 									<i class="ti-trash"></i>
@@ -96,28 +104,13 @@
 
 	<th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
 
-	<div class="modal fade" id="recipeDetailModal" tabindex="-1" aria-labelledby="recipeDetailModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title">Recipe Info</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-						<i class="ti-close"></i>
-					</button>
-				</div>
-				<div class="modal-body">
-					...
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<th:block th:replace="~{/settings/partials/recipe-info-modal :: recipe-info-modal}"></th:block>
+
 
 
 </div>
 
 <th:block th:replace="~{/fragments/share-modal :: share-modal}"></th:block>
 
+<script th:src="@{/js/pages/recipe-list.js}"></script>
 <th:block th:replace="~{/settings/partials/footer :: footer}"></th:block>

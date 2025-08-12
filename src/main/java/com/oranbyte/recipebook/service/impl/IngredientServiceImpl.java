@@ -12,6 +12,8 @@ import com.oranbyte.recipebook.repository.RecipeIngredientRepository;
 import com.oranbyte.recipebook.repository.UnitRepository;
 import com.oranbyte.recipebook.service.IngredientService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class IngredientServiceImpl implements IngredientService{
 
@@ -49,6 +51,11 @@ public class IngredientServiceImpl implements IngredientService{
 	        recipeIngredientRepository.save(ri);
 	    }
 	}
+
+	@Transactional
+    public void deleteByRecipe(Recipe recipe) {
+    	recipeIngredientRepository.deleteByRecipe(recipe);
+    }
 	
 	
 
