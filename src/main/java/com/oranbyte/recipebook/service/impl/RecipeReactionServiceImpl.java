@@ -65,4 +65,14 @@ public class RecipeReactionServiceImpl implements RecipeReactionService{
 		return recipeReactionRepository.countByRecipeIdAndReactionType(recipeId, ReactionType.DISLIKE);
 	}
 
+	@Override
+	public long getLikeCount(Long userId) {
+		return recipeReactionRepository.countByUserIdAndReactionType(userId, ReactionType.LIKE);
+	}
+
+	@Override
+	public long getDislikeCount(Long userId) {
+		return recipeReactionRepository.countByUserIdAndReactionType(userId, ReactionType.DISLIKE);
+	}
+
 }

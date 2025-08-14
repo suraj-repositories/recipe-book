@@ -82,7 +82,7 @@
 									<div class="recipe-image" th:if="${recipeDto.imagesDtos != null}"
 										th:each="imageDto : ${recipeDto.imagesDtos}">
 										<img th:src="@{${imageDto.imagePath}}" alt="recipe-image" >
-										<button type="button" class="recipe-image-delete-btn">
+										<button type="button" class="recipe-image-delete-btn" th:data-recipe-image-id="${imageDto.id}">
 											<i class="ti-trash"></i>
 										</button>
 									</div>

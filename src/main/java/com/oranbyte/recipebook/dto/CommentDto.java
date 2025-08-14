@@ -25,6 +25,8 @@ public class CommentDto {
 	private RecipeDto recipe;
 	private List<CommentDto> replies;
 	private LocalDateTime createdAt;
+	private String createdTimeAgo;
+	private boolean hasMoreReplies;
 	
 
 }

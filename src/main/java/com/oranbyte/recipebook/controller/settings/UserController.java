@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oranbyte.recipebook.dto.UserDto;
 import com.oranbyte.recipebook.service.PaginationService;
+import com.oranbyte.recipebook.service.RecipeReactionService;
+import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.service.UserService;
 
 @Controller
@@ -24,6 +26,12 @@ public class UserController {
 	
 	@Autowired
 	private PaginationService paginationService;
+	
+	@Autowired
+	private RecipeReactionService recipeReactionService;
+	
+	@Autowired
+	private RecipeService recipeService;
 
 	@GetMapping
 	public String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
@@ -33,6 +41,12 @@ public class UserController {
 
 		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<UserDto> users = userService.searchUsers(search, pageable);
+		
+		users.getContent().forEach(user -> {
+	        user.setLikeCount(recipeReactionService.getLikeCount(user.getId()));
+	        user.setDislikeCount(recipeReactionService.getDislikeCount(user.getId()));
+	        user.setRecipeCount(recipeService.getRecipeCount(user.getId()));
+	    });
 
 		model.addAttribute("users", users.getContent());
 		model.addAllAttributes(paginationService.getPageMetadata(users, page));

@@ -35,4 +35,9 @@ public class UserDto {
 	private int recipeCount;
 	private long followers;
 	private long following;
+	private long likeCount;
+	private long dislikeCount;
+	
+	private String createdAt;
+	private String deletedAt;
 }

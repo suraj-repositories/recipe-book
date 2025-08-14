@@ -24,7 +24,7 @@ import com.oranbyte.recipebook.service.UserService;
 
 @Controller
 @RequestMapping("/settings/my-recipes")
-public class MyRecipeSettings {
+public class MyRecipeSettingsController {
 
 	@Autowired
 	private RecipeService recipeService;

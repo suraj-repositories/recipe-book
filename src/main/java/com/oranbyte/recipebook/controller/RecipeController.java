@@ -197,8 +197,15 @@ public class RecipeController {
 	@DeleteMapping("{recipe}/delete")
 	public String destroy(@PathVariable Recipe recipe, Model model, RedirectAttributes redirectAttr, HttpServletRequest request) {
 		try {
-			recipeService.deleteRecipe(recipe);
-			redirectAttr.addFlashAttribute("success", "Recipe Delete Successfully!");
+			User user = userService.getLoginUser();
+			 if (user != null && (user.getId().equals(recipe.getUser().getId()) || user.getRole().equalsIgnoreCase("admin"))) {
+					recipeService.deleteRecipe(recipe);
+					redirectAttr.addFlashAttribute("success", "Recipe Delete Successfully!");
+			 }else {
+				 redirectAttr.addFlashAttribute("error", "Unauthorized!");
+			 }
+			
+			
 		}catch(Exception e) {
 			redirectAttr.addFlashAttribute("error", e.getMessage());
 		}
@@ -215,7 +222,6 @@ public class RecipeController {
 		Set<Tag> tags = recipe.getTags();
 		List<RecipeIngredientDto> ingredients = recipe.getIngredients().stream().map(RecipeIngredientMapper::toDto).toList();
 		
-		System.out.println(ingredients.getFirst());
 		model.addAttribute("recipeDto", dto);
 		model.addAttribute("tags", tags);
 		model.addAttribute("ingredients", ingredients);

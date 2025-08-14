@@ -56,45 +56,10 @@
 					<div class="mb-5 border-top mt-4 pt-5">
 						<h3 class="mb-4">Comments</h3>
 
-						<div id="commentSection" th:data-recipe-id="${recipe.id}"></div>
-
+						<div id="commentSection" class="recipe-comments" th:data-recipe-id="${recipe.id}"
+							 th:data-auth-user-image="@{${ authUser != null ? authUser.image : ''}}">
+						</div>
 						<button id="loadMoreBtn" class="btn btn-primary mb-4">Load More</button>
-
-
-						<!--
-						<div class="media d-block d-sm-flex mb-4 pb-4">
-							<a class="d-inline-block mr-2 mb-3 mb-md-0" href="#">
-								<img src="images/post/user-01.jpg" class="mr-3 rounded-circle" alt="">
-							</a>
-							<div class="media-body">
-								<a href="#!" class="h4 d-inline-block mb-3">Alexender Grahambel</a>
-								<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-									sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-									Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in
-									faucibus.</p>
-								<span class="text-black-800 mr-3 font-weight-600">April 18, 2020 at 6.25 pm</span>
-								<a class="text-primary font-weight-600" href="#!">Reply</a>
-							</div>
-						</div>
-						<div class="media d-block d-sm-flex">
-							<div class="d-inline-block mr-2 mb-3 mb-md-0" href="#">
-								<img class="mr-3" src="images/post/arrow.png" alt="">
-								<a href="#!"><img src="images/post/user-02.jpg" class="mr-3 rounded-circle" alt=""></a>
-							</div>
-							<div class="media-body">
-								<a href="#!" class="h4 d-inline-block mb-3">Nadia Sultana Tisa</a>
-								<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-									sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-									Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in
-									faucibus.</p>
-								<span class="text-black-800 mr-3 font-weight-600">April 18, 2020 at 6.25 pm</span>
-								<a class="text-primary font-weight-600" href="#!">Reply</a>
-							</div>
-					</div>
-						</div>
-					<div>
-					-->
-
 
 						<h3 class="mb-4">Leave a Reply</h3>
 						<form th:action="@{/recipe/comment}" th:object="${comment_dto}" id="commentForm" method="POST">
@@ -109,7 +74,8 @@
 										required></textarea>
 								</div>
 							</div>
-							<button class="btn btn-primary" type="submit">Comment Now</button>
+							<button th:if="${authUser != null}" class="btn btn-primary" type="submit">Comment Now</button>
+							<a th:if="${authUser == null}" class="btn btnauthUser null-primary" th:href="@{\\login}">Comment Now</a>
 						</form>
 					</div>
 				</div>
@@ -131,10 +97,13 @@
 
 					</ul>
 					<div class="d-flex g-2 align-items-center justify-content-center">
-						<button class="btn follow-btn mb-2 mx-1" th:classappend="${isFollowing ? 'active' : ''}" th:text="${isFollowing ? 'Following' : 'Follow'}" id="follow-btn" th:data-user-id="${user.id}">
+						<button class="btn follow-btn mb-2 mx-1" th:classappend="${isFollowing ? 'active' : ''}"
+							th:text="${isFollowing ? 'Following' : 'Follow'}" id="follow-btn"
+							th:data-user-id="${user.id}">
 							Follow
 						</button>
-						<a th:href="@{/u/{username}(username=${user.username})}" class="btn btn-light mx-1 mb-2">About Me</a>
+						<a th:href="@{/u/{username}(username=${user.username})}" class="btn btn-light mx-1 mb-2">About
+							Me</a>
 					</div>
 				</div>
 

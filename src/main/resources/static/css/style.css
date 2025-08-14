@@ -2617,3 +2617,38 @@ mark {
 	color: #58151c;
 	background: #f8d7da;
 }
+
+.gap30v10h {
+	gap: 30px 10px;
+}
+
+.btn-no-style {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+.recipe-comments input:focus,
+.recipe-comments textarea:focus {
+	border-color: #2ec458;
+}
+
+.recipe-comments textarea {
+	border: none;
+	border-bottom: 1px solid black;
+	border-radius: 0;
+}
+
+.recipe-comments .reply-form .image-box{
+	height: 40px;
+	width: 40px;
+}
+.recipe-comments .reply-form img{
+	height: 38px;
+	width: 38px;
+}
+.load-more-replies:hover{
+	border-color: #052c65;
+	color: #2ec458;
+}
+

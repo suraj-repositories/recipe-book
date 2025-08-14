@@ -1,6 +1,7 @@
 package com.oranbyte.recipebook.service.impl;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,16 @@ public class RecipeImageServiceImpl implements RecipeImageService{
 	            }
 	        }
 	    }
+	}
+
+	@Override
+	public void deleteRecipeImage(RecipeImage recipeImage) {
+		recipeImageRepository.delete(recipeImage);
+	}
+
+	@Override
+	public Optional<RecipeImage> getRecipeImage(Long id) {
+		return recipeImageRepository.findById(id);
 	}
 
 	

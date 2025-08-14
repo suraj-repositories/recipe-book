@@ -240,7 +240,31 @@ function enableImageSelection(recipeImageBoxSelector) {
 	if(deleteBtns){
 		deleteBtns.forEach(btn =>{
 			btn.addEventListener('click', ()=>{
-				btn.closest(".recipe-image").remove();
+				
+				const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+				const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+				const recipeImageId = btn.getAttribute('data-recipe-image-id');
+				btn.closest(".recipe-image").remove();							
+				
+				if(!recipeImageId | !csrfToken | !csrfHeader){
+					console.error("error happen");
+					return;
+				}
+				
+				
+				fetch(`/recipe-images/${recipeImageId}`, {
+					method: 'DELETE',
+					headers: { [csrfHeader]: csrfToken },
+				})
+					.then(res => res.json())
+					.then(data => {
+						if (data.status === 'success') {
+						} else {
+							Toastify.error(data.message);
+						}
+					});
+				
 			});
 			
 		});

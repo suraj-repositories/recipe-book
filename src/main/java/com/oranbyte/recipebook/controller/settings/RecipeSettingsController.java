@@ -10,9 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oranbyte.recipebook.dto.RecipeDto;
+import com.oranbyte.recipebook.service.CommentService;
 import com.oranbyte.recipebook.service.PaginationService;
+import com.oranbyte.recipebook.service.RecipeReactionService;
 import com.oranbyte.recipebook.service.RecipeService;
 
 @Controller
@@ -26,6 +29,11 @@ public class RecipeSettingsController {
 	@Autowired
 	private PaginationService paginationService;
 	
+	@Autowired
+	private RecipeReactionService recipeReactionService;
+	
+	@Autowired
+	private CommentService commentService;
 
 	@GetMapping
 	public String index(
@@ -40,6 +48,14 @@ public class RecipeSettingsController {
 		int pageIndex = Math.max(page - 1, 0);
 		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<RecipeDto> recipePage = recipeService.searchRecipes(categoryId, tagId, title, difficulty, pageable);
+		
+		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+	    recipePage.getContent().forEach(recipe -> {
+	        recipe.setShareUrl(baseUrl + "/recipes/" + recipe.getId());
+	        recipe.setLikeCount(recipeReactionService.getLikeCount(recipe.getId()));
+	        recipe.setDislikeCount(recipeReactionService.getDislikeCount(recipe.getId()));
+	        recipe.setCommentCount(commentService.getCommentCount(recipe.getId()));
+	    });
 		
 		model.addAttribute("recipes", recipePage.getContent());
 		model.addAllAttributes(paginationService.getPageMetadata(recipePage, page));

@@ -18,4 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpec
 
 	long countByRecipeId(Long recipeId);
 	
+	Page<Comment> findByParentId(Long parentId, Pageable pageable);
+	
 }
