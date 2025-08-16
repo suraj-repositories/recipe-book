@@ -127,6 +127,25 @@ public class CommentController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/comments/{commentId}")
+	public ResponseEntity<Map<String, Object>> getComment(@PathVariable Long commentId) {
+		
+		Comment comment = commentRepository.findById(commentId).orElse(null);
+		
+		CommentDto commentDto = CommentMapper.toDto(comment);
+		
+		Context context = new Context();
+		context.setVariable("comment", commentDto);
+		context.setVariable("authUser", userService.getLoginUser());
+		
+		String html = templateEngine.process("recipes/partials/comment", context);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("html", html);
+		
+		return ResponseEntity.ok(response);
+	}
 
 	@GetMapping("/comment/replies")
 	public ResponseEntity<Map<String, Object>> getReplies(@RequestParam Long commentId, @RequestParam int page) {
@@ -149,5 +168,8 @@ public class CommentController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	
+
 
 }

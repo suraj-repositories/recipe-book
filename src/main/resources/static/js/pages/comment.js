@@ -122,8 +122,6 @@ function enableCommentReplyButtons() {
 
 }
 
-
-
 function createReplyInput() {
 	const container = document.createElement("div");
 	container.classList.add("reply-form");

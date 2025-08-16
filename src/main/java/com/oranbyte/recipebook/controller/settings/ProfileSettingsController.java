@@ -89,13 +89,13 @@ public class ProfileSettingsController {
 	                .build());
 	        }
 	    });
-
+	    
 	    user.getSocialLinks().clear();
 	    user.getSocialLinks().addAll(updatedLinks);
 
-
 	    userRepository.save(user);
 	    authService.login(user);
+	    
 	    redirectAttributes.addFlashAttribute("success", "Your profile updated successfully!");
 	    return "redirect:" + request.getHeader("Referer");
 	}

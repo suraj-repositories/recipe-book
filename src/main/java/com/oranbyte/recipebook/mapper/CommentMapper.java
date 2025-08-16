@@ -13,7 +13,7 @@ public class CommentMapper {
 	    int limit = 2;
 
 	    List<CommentDto> limitedReplies = allReplies.stream()
-	        .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())) // newest first
+	        .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
 	        .limit(limit)
 	        .map(CommentMapper::toShallowDto)
 	        .toList();
@@ -42,6 +42,7 @@ public class CommentMapper {
                 .message(comment.getMessage())
                 .user(UserMapper.toDto(user))
                 .createdTimeAgo(DateUtil.timeAgo(comment.getCreatedAt()))
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }

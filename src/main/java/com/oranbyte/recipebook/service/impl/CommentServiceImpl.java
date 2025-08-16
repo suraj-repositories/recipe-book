@@ -46,4 +46,15 @@ public class CommentServiceImpl implements CommentService {
 		return commentRepository.countByRecipeId(recipeId);
 	}
 
+	@Override
+	public void deleteComment(Long commentId) {
+		commentRepository.deleteById(commentId);
+	}
+
+	@Override
+	public Comment getComment(Long commentId) {
+		// TODO Auto-generated method stub
+		return commentRepository.findById(commentId).orElse(null);
+	}
+
 }

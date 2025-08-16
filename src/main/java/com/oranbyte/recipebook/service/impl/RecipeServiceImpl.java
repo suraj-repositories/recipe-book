@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -27,92 +28,71 @@ public class RecipeServiceImpl implements RecipeService{
 
 	@Autowired
 	private RecipeRepository recipeRepository;
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
 	@Override
 	public Recipe saveRecipe(Recipe recipe) throws UserNotFoundException {
 		if (recipe.getServings() <= 0) {
-		    recipe.setServings(1);
+			recipe.setServings(1);
 		}
 		return recipeRepository.save(recipe);
 	}
-	
-	public Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty, Pageable pageable) {
-		Specification<Recipe> spec = RecipeSpecification.hasCategory(categoryId)
-			    .and(RecipeSpecification.hasTag(tagId))
-			    .and(RecipeSpecification.hasTitleLike(title))
-			    .and(RecipeSpecification.hasDifficulty(difficulty));
 
-	    return recipeRepository.findAll(spec, pageable)
-	        .map(RecipeMapper::toDto);
+	public Page<RecipeDto> searchRecipes(Long categoryId, Long tagId, String title, String difficulty,
+			Pageable pageable) {
+		Specification<Recipe> spec = RecipeSpecification.hasCategory(categoryId).and(RecipeSpecification.hasTag(tagId))
+				.and(RecipeSpecification.hasTitleLike(title)).and(RecipeSpecification.hasDifficulty(difficulty));
+
+		return recipeRepository.findAll(spec, pageable).map(RecipeMapper::toDto);
 	}
 
-
-	
 	@Override
 	public Recipe convertToEntity(RecipeDto dto, User user) {
-	    Category category = categoryRepository.findById(dto.getCategoryId())
-	                            .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+		Category category = categoryRepository.findById(dto.getCategoryId())
+				.orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-	    return Recipe.builder()
-	            .id(dto.getId())
-	            .title(dto.getTitle())
-	            .description(dto.getDescription())
-	            .instructions(dto.getInstructions())
-	            .prepTime(dto.getPrepTime())
-	            .cookTime(dto.getCookTime())
-	            .servings(dto.getServings())
-	            .difficulty(dto.getDifficulty())
-	            .user(user)
-	            .category(category)
-	            .build();
+		return Recipe.builder().id(dto.getId()).title(dto.getTitle()).description(dto.getDescription())
+				.instructions(dto.getInstructions()).prepTime(dto.getPrepTime()).cookTime(dto.getCookTime())
+				.servings(dto.getServings()).difficulty(dto.getDifficulty()).user(user).category(category).build();
 	}
 
 	@Override
 	public void updateEntityFromDto(Recipe existingRecipe, RecipeDto dto, User user) {
-	    Category category = categoryRepository.findById(dto.getCategoryId())
-	            .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+		Category category = categoryRepository.findById(dto.getCategoryId())
+				.orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-	    existingRecipe.setTitle(dto.getTitle());
-	    existingRecipe.setDescription(dto.getDescription());
-	    existingRecipe.setInstructions(dto.getInstructions());
-	    existingRecipe.setPrepTime(dto.getPrepTime());
-	    existingRecipe.setCookTime(dto.getCookTime());
-	    existingRecipe.setServings(dto.getServings());
-	    existingRecipe.setDifficulty(dto.getDifficulty());
-	    existingRecipe.setUser(user);
-	    existingRecipe.setCategory(category);
+		existingRecipe.setTitle(dto.getTitle());
+		existingRecipe.setDescription(dto.getDescription());
+		existingRecipe.setInstructions(dto.getInstructions());
+		existingRecipe.setPrepTime(dto.getPrepTime());
+		existingRecipe.setCookTime(dto.getCookTime());
+		existingRecipe.setServings(dto.getServings());
+		existingRecipe.setDifficulty(dto.getDifficulty());
+		existingRecipe.setUser(user);
+		existingRecipe.setCategory(category);
 	}
-
 
 	@Override
 	public List<RecipeDto> getLast20Recipes() {
-		 List<Recipe> recipes = recipeRepository.findTop20ByOrderByIdDesc();
+		List<Recipe> recipes = recipeRepository.findTop20ByOrderByIdDesc();
 
-	        return recipes.stream()
-	                .map(RecipeMapper::toDto)
-	                .collect(Collectors.toList());
+		return recipes.stream().map(RecipeMapper::toDto).collect(Collectors.toList());
 	}
-
 
 	@Override
 	public Page<RecipeDto> getAllRecipes(Pageable pageable) {
 		Page<Recipe> recipePage = recipeRepository.findAll(pageable);
-	    
-	    List<RecipeDto> recipeDtos = recipePage.getContent().stream()
-	        .map(RecipeMapper::toDto)
-	        .toList();
 
-	    return new PageImpl<>(recipeDtos, pageable, recipePage.getTotalElements());
+		List<RecipeDto> recipeDtos = recipePage.getContent().stream().map(RecipeMapper::toDto).toList();
+
+		return new PageImpl<>(recipeDtos, pageable, recipePage.getTotalElements());
 	}
-
 
 	@Override
 	public Page<RecipeDto> recentRecipes(Pageable pageable) {
-	    return recipeRepository.findByOrderByIdDesc(pageable)
-	            .map(RecipeMapper::toDto);
+		return recipeRepository.findByOrderByIdDesc(pageable).map(RecipeMapper::toDto);
 	}
 
 	@Override
@@ -124,14 +104,10 @@ public class RecipeServiceImpl implements RecipeService{
 	public Page<RecipeDto> searchRecipes(Long userId, Long categoryId, Long tagId, String title, String difficulty,
 			Pageable pageable) {
 		Specification<Recipe> spec = RecipeSpecification.hasUserId(userId)
-			    .and(RecipeSpecification.hasCategory(categoryId))
-			    .and(RecipeSpecification.hasTag(tagId))
-			    .and(RecipeSpecification.hasTitleLike(title))
-			    .and(RecipeSpecification.hasDifficulty(difficulty));
+				.and(RecipeSpecification.hasCategory(categoryId)).and(RecipeSpecification.hasTag(tagId))
+				.and(RecipeSpecification.hasTitleLike(title)).and(RecipeSpecification.hasDifficulty(difficulty));
 
-
-	    return recipeRepository.findAll(spec, pageable)
-	        .map(RecipeMapper::toDto);
+		return recipeRepository.findAll(spec, pageable).map(RecipeMapper::toDto);
 	}
 
 	@Override
@@ -149,6 +125,19 @@ public class RecipeServiceImpl implements RecipeService{
 		return recipeRepository.findByIdAndUser(id, user);
 	}
 
+	public List<RecipeDto> getTop3PopularRecipesThisMonth() {
+	    return recipeRepository.findMostPopularRecipesThisMonth(PageRequest.of(0, 3)).stream().map(RecipeMapper::toDto).toList();
+	}
 
-	
+
+	@Override
+	public RecipeDto getRandomRecipe() {
+		return RecipeMapper.toDto(recipeRepository.findRandomRecipe());
+	}
+
+	@Override
+	public RecipeDto getMostPopularRecipe() {
+		return RecipeMapper.toDto(recipeRepository.findMostPopularRecipe());
+	}
+
 }

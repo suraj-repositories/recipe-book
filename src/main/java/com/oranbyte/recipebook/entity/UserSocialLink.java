@@ -1,5 +1,8 @@
 package com.oranbyte.recipebook.entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +22,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserSocialLink {
+@SQLDelete(sql = "UPDATE user_social_link SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
+public class UserSocialLink extends BaseEntity{
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

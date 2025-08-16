@@ -52,8 +52,8 @@ public class RecipeSettingsController {
 		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 	    recipePage.getContent().forEach(recipe -> {
 	        recipe.setShareUrl(baseUrl + "/recipes/" + recipe.getId());
-	        recipe.setLikeCount(recipeReactionService.getLikeCount(recipe.getId()));
-	        recipe.setDislikeCount(recipeReactionService.getDislikeCount(recipe.getId()));
+	        recipe.setLikeCount(recipeReactionService.getLikeCountByRecipeId(recipe.getId()));
+	        recipe.setDislikeCount(recipeReactionService.getDislikeCountByRecipeId(recipe.getId()));
 	        recipe.setCommentCount(commentService.getCommentCount(recipe.getId()));
 	    });
 		

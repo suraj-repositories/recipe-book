@@ -89,5 +89,15 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll(spec, pageable).map(UserMapper::toDto);
 	}
 
+	@Override
+	public boolean isAdmin(String userName) {
+		return userRepository.existsByUsernameAndRole(userName, "admin");
+	}
+
+	@Override
+	public void deleteUser(Long userId) {
+		userRepository.deleteById(userId);
+	}
+
 
 }

@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long>,  JpaSpecifica
 	List<User> findThreeRandomUsersWithRecipes();
 	
 	Optional<User> findByUsernameOrEmail(String username, String email);
+	
+	boolean existsByUsernameAndRole(String username, String role);
 
 	
 }

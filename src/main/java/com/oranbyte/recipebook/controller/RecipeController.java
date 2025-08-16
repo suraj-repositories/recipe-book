@@ -241,10 +241,13 @@ public class RecipeController {
 
 	    try {
 	        User user = userService.getUser(principal.getName());
-	        
-	        Recipe existingRecipe = recipeService.getRecipeByIdAndUser(id, user)
-	                .orElseThrow(() -> new RuntimeException("Recipe not found or access denied"));
+	        Recipe existingRecipe = recipeService.getRecipe(id)
+	                .orElseThrow(() -> new RuntimeException("Recipe not found!"));
 
+	        if(!user.getRole().equals("admin") && user.getId() != existingRecipe.getUser().getId()) {
+	        	throw new RuntimeException("Access Denied!");
+	        }
+	        
 	        recipeService.updateEntityFromDto(existingRecipe, recipeDto, user);
 
 	        if (tags != null && tags.length > 0) {

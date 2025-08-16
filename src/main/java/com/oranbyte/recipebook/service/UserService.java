@@ -25,7 +25,11 @@ public interface UserService {
 	
 	boolean existsByEmail(String email);
 	
+	boolean isAdmin(String userName);
+	
 	User getLoginUser();
 
 	Page<UserDto> searchUsers(String search, Pageable pageable);
+	
+	void deleteUser(Long userId);
 }

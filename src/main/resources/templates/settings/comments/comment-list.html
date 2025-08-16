@@ -4,6 +4,8 @@
 <th:block th:replace="~{/settings/partials/header :: header}"></th:block>
 
 <div class="content users-list px-0 px-sm-4">
+	<th:block th:replace="~{/fragments/alert :: alert}"></th:block>
+	
 	<h3>Recipe Comments</h3>
 	<hr class="mt-0 mb-3">
 
@@ -56,9 +58,15 @@
 					</td>
 					<td>
 						<div class="action-btns">
-							<button class="more"><i class="ti-info-alt"></i></button>
+							<button class="more openCommentInfoModal" th:data-comment-id="${comment.id}">
+								<i class="ti-info-alt"></i>
+							</button>
+							<!--/*
 							<button class="share"><i class="ti-comments"></i></button>
-							<button class="delete"><i class="ti-trash"></i></button>
+							*/-->
+							<form th:action="@{/settings/comments/{id} (id=${comment.id})}" method="post" th:method="DELETE" >
+								<button class="delete" type="submit"><i class="ti-trash"></i></button>
+							</form>
 						</div>
 					</td>
 				</tr>
@@ -69,10 +77,9 @@
 
 	<th:block th:replace="~{/layouts/pagination :: pagination}"></th:block>
 
-
-
 </div>
 
+<th:block th:replace="~{/settings/comments/comment-info-modal :: comment-info-modal}"></th:block>
 
-
+<script th:src="@{/js/pages/comment-list.js}"></script>
 <th:block th:replace="~{/settings/partials/footer :: footer}"></th:block>

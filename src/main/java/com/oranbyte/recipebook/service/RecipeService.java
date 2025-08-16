@@ -37,4 +37,11 @@ public interface RecipeService {
 	
 	Optional<Recipe> getRecipeByIdAndUser(Long id, User user);
 	
+	List<RecipeDto> getTop3PopularRecipesThisMonth();
+	
+	RecipeDto getRandomRecipe();
+	
+	RecipeDto getMostPopularRecipe();
+	
+	
 }

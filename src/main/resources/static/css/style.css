@@ -1626,7 +1626,7 @@ mark {
 
 .video-wrapper .play-btn {
 	position: absolute;
-	left: 50%;
+	left: 52%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -2639,16 +2639,161 @@ mark {
 	border-radius: 0;
 }
 
-.recipe-comments .reply-form .image-box{
+.recipe-comments .reply-form .image-box {
 	height: 40px;
 	width: 40px;
 }
-.recipe-comments .reply-form img{
+
+.recipe-comments .reply-form img {
 	height: 38px;
 	width: 38px;
 }
-.load-more-replies:hover{
+
+.load-more-replies:hover {
 	border-color: #052c65;
 	color: #2ec458;
 }
 
+.comment-info-modal .reply-btn {
+	display: none;
+}
+
+.comment-info-modal .comment-box a {
+	margin-right: 8px !important;
+}
+
+.comment-info-modal .comment-box a img {
+	margin: 0 !important;
+}
+
+/* ERROR PAGE START */
+
+section.error-section {
+	height: fit-content;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* background: url("/images/error/error.gif") no-repeat center center/cover;*/
+	position: relative;
+	overflow: hidden;
+	z-index: 1000;
+}
+
+section.error-section::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.error-section .error-container {
+	text-align: center;
+	position: relative;
+	z-index: 2;
+	margin: 100px 0;
+	padding: 20px;
+}
+
+.error-section .four_zero_four_bg h1 {
+	font-size: 140px;
+	font-weight: bold;
+	margin: 10px 0;
+	color: #4fd675;
+}
+
+.error-section .contant_box_404 h3 {
+	font-size: 36px;
+	margin: 15px 0;
+	font-weight: 700;
+}
+
+.error-section .contant_box_404 p {
+	font-size: 20px;
+	margin-bottom: 30px;
+	color: #ccc;
+}
+
+.error-section .go_back_to_home {
+
+	padding: 14px 36px;
+	background: #4fd675;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	border-radius: 50px;
+	text-decoration: none;
+	transition: all 0.3s ease;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+.error-section .header-shape-2 {
+	position: absolute;
+	right: 10%;
+	top: 25%;
+}
+
+.error-section .header-shape-3 {
+	position: absolute;
+	right: 25%;
+	bottom: 7%;
+}
+
+.error-section .go_back_to_home:hover {
+	background: #fff;
+	color: #4fd675;
+	transform: translateY(-4px);
+	box-shadow: 0 10px 30px rgba(79, 214, 117, 0.6);
+}
+
+@keyframes glow {
+	from {
+		text-shadow: 0px 0px 20px rgba(79, 214, 117, 0.9),
+			0px 0px 40px rgba(79, 214, 117, 0.6);
+	}
+
+	to {
+		text-shadow: 0px 0px 30px rgba(79, 214, 117, 1),
+			0px 0px 60px rgba(79, 214, 117, 0.8);
+	}
+}
+
+@media (max-width: 600px) {
+	.error-section .four_zero_four_bg h1 {
+		font-size: 90px;
+	}
+
+	.error-section .contant_box_404 h3 {
+		font-size: 24px;
+	}
+
+	.error-section .contant_box_404 p {
+		font-size: 16px;
+	}
+}
+
+/* ERROR PAGE END */
+
+section article.card img.card-img-top {
+	height: 200px;
+	object-fit: cover;
+}
+
+.post-slider .card-img {
+	height: 350px;
+	object-fit: cover;
+}
+
+.recipe-image-box .recipe-image img {
+	height: 80px;
+	width: 140px;
+	object-fit: cover;
+}

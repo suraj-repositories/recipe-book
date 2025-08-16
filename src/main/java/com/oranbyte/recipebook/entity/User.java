@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +37,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@SQLDelete(sql = "UPDATE users SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 public class User extends BaseEntity {
 
 	@Id
@@ -88,6 +93,10 @@ public class User extends BaseEntity {
 	@ManyToMany(mappedBy = "following")
 	private Set<User> followers = new HashSet<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> comments = new ArrayList<>();
+
+	
 	public void follow(User user) {
 		this.following.add(user);
 		user.getFollowers().add(this);
