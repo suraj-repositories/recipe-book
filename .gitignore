@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### config files
+application.yml
+application.properties
+
 ### STS ###
 .apt_generated
 .classpath

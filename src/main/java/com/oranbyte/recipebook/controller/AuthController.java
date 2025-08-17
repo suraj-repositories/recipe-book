@@ -104,5 +104,7 @@ public class AuthController {
 		}
 		return ResponseEntity.ok(new ApiResponse<>("success", "Email is available: " + email));
 	}
+	
+	
 
 }

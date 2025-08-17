@@ -38,4 +38,6 @@ public interface UserService {
 	Page<UserDto> searchUsers(String search, Pageable pageable);
 	
 	void deleteUser(Long userId);
+	
+	 void updatePassword(String email, String newPassword);
 }

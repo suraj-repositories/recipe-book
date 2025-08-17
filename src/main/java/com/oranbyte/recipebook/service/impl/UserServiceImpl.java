@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.oranbyte.recipebook.dto.UserDto;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDto getUserDto(Long id) {
@@ -43,12 +47,11 @@ public class UserServiceImpl implements UserService {
 	public boolean existsByEmail(String email) {
 		return userRepository.existsByEmail(email);
 	}
-	
+
 	@Override
 	public boolean existsByUsername(String username) {
 		return userRepository.existsByUsername(username);
 	}
-
 
 	@Override
 	public boolean existsByEmailIncludingDeleted(String email) {
@@ -60,8 +63,6 @@ public class UserServiceImpl implements UserService {
 		return userRepository.existsByUsernameIncludingDeleted(username);
 	}
 
-	
-	
 	@Override
 	public User getUser(String username) {
 		return userRepository.findByUsernameOrEmail(username, username).orElse(null);
@@ -74,23 +75,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getLoginUser() {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-	    System.out.println(auth);
-	    if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
-	        return null;
-	    }
+		System.out.println(auth);
+		if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+			return null;
+		}
 
-	    Object principal = auth.getPrincipal();
-	    String username;
-	    System.out.println(principal);
-	    if (principal instanceof UserDetails userDetails) {
-	        username = userDetails.getUsername();
-	    } else {
-	        username = principal.toString();
-	    }
-	    System.out.println(username);
-	    return getUser(username);
+		Object principal = auth.getPrincipal();
+		String username;
+		System.out.println(principal);
+		if (principal instanceof UserDetails userDetails) {
+			username = userDetails.getUsername();
+		} else {
+			username = principal.toString();
+		}
+		System.out.println(username);
+		return getUser(username);
 	}
 
 	@Override
@@ -100,10 +101,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<UserDto> searchUsers(String search, Pageable pageable) {
-		Specification<User> spec = UserSpecification.hasNameLike(search)
-		.and(UserSpecification.hasUsernameLike(search))
-		.and(UserSpecification.hasEmailLike(search));
-		
+		Specification<User> spec = UserSpecification.hasNameLike(search).and(UserSpecification.hasUsernameLike(search))
+				.and(UserSpecification.hasEmailLike(search));
+
 		return userRepository.findAll(spec, pageable).map(UserMapper::toDto);
 	}
 
@@ -117,6 +117,12 @@ public class UserServiceImpl implements UserService {
 		userRepository.deleteById(userId);
 	}
 
-
+	@Override
+	public void updatePassword(String email, String newPassword) {
+		userRepository.findByEmail(email).ifPresent(user -> {
+			user.setPassword(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
+		});
+	}
 
 }
