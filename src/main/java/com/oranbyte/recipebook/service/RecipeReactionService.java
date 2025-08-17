@@ -6,20 +6,27 @@ import com.oranbyte.recipebook.enums.ReactionType;
 
 public interface RecipeReactionService {
 	
-	public void reactToRecipe(User user, Recipe recipe, ReactionType type);
+	void reactToRecipe(User user, Recipe recipe, ReactionType type);
 	
-	public long getLikeCount(Recipe recipe);
+	long getLikeCount(Recipe recipe);
 	
-	public long getDislikeCount(Recipe recipe);
+	long getDislikeCount(Recipe recipe);
 	
-	public long getLikeCountByRecipeId(Long recipeId);
+	long getLikeCountByRecipeId(Long recipeId);
 	
-	public long getDislikeCountByRecipeId(long recipeId);
+	long getDislikeCountByRecipeId(long recipeId);
 	
-	public long getLikeCountByUserId(Long userId);
+	long getLikeCountByUserId(Long userId);
 	
-	public long getDislikeCountByUserId(Long userId);
+	long getDislikeCountByUserId(Long userId);
+	
+	boolean isReacted(User user, Recipe recipe, ReactionType type);
+	
+	long getWeeklyCount(Long userId, ReactionType type);
+	
+	long getMonthlyCount(Long userId, ReactionType type);
+	
+	long getYearlyCount(Long userId, ReactionType type);
 
-	public boolean isReacted(User user, Recipe recipe, ReactionType type);
-
+	
 }

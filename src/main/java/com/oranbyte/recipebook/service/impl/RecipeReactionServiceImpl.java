@@ -1,5 +1,8 @@
 package com.oranbyte.recipebook.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +77,26 @@ public class RecipeReactionServiceImpl implements RecipeReactionService{
 	public long getDislikeCountByUserId(Long userId) {
 		return recipeReactionRepository.countByUserIdAndReactionType(userId, ReactionType.DISLIKE);
 	}
+	
+	 public long getWeeklyCount(Long userId, ReactionType type) {
+	        LocalDateTime startOfWeek = LocalDate.now()
+	                .with(java.time.DayOfWeek.MONDAY)
+	                .atStartOfDay();
+	        return recipeReactionRepository.countByUserIdAndReactionTypeAndCreatedAtAfter(userId, type, startOfWeek);
+	    }
+
+	    public long getMonthlyCount(Long userId, ReactionType type) {
+	        LocalDateTime startOfMonth = LocalDate.now()
+	                .withDayOfMonth(1)
+	                .atStartOfDay();
+	        return recipeReactionRepository.countByUserIdAndReactionTypeAndCreatedAtAfter(userId, type, startOfMonth);
+	    }
+
+	    public long getYearlyCount(Long userId, ReactionType type) {
+	        LocalDateTime startOfYear = LocalDate.now()
+	                .withDayOfYear(1)
+	                .atStartOfDay();
+	        return recipeReactionRepository.countByUserIdAndReactionTypeAndCreatedAtAfter(userId, type, startOfYear);
+	    }
 
 }

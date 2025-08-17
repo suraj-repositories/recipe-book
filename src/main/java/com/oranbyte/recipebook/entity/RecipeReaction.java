@@ -27,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "recipe_reactions", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "recipe_id" }))
-public class RecipeReaction {
+public class RecipeReaction extends BaseEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

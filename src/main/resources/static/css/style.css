@@ -2808,3 +2808,15 @@ section article.card img.card-img-top {
 	font-size: 14px;
 	user-select: none;
 }
+
+.analysis .card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.analysis .card-header select.form-select {
+	max-width: 130px;
+	padding: 2px 10px;
+	max-height: 30px;
+}
