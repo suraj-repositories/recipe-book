@@ -36,17 +36,12 @@
 				<span>or</span>
 			</p>
 
-			<div th:if="${param.error}">
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<strong>Error:</strong> Something went wrong!
-				</div>
-			</div>
-
+			<th:block th:replace="~{/fragments/alert :: alert}"></th:block>
 
 			<!-- Name input box -->
 			<div class="input_box">
-				<label for="name">Name</label>
-				<input type="text" th:field="*{name}" id="name" placeholder="Enter your name" required />
+				<label for="name">Username</label>
+				<input type="text" th:field="*{username}" id="username" placeholder="Create your username" required />
 			</div>
 			<!-- Email input box -->
 			<div class="input_box">
@@ -69,6 +64,7 @@
 
 	</div>
 
+	<script th:src="@{/js/pages/register.js}"></script>
 	<th:block th:replace="~{/layouts/auth-layout :: footer}"></th:block>
 </body>
 

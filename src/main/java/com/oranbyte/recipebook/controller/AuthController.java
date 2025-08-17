@@ -2,6 +2,7 @@ package com.oranbyte.recipebook.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -9,12 +10,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.oranbyte.recipebook.api.ApiResponse;
 import com.oranbyte.recipebook.dto.UserDto;
 import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthController {
@@ -43,20 +48,25 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public String register(@ModelAttribute UserDto userDto, Model model, Authentication authentication, RedirectAttributes redirectAttr) {
+	public String register(@ModelAttribute UserDto userDto, Model model, Authentication authentication, RedirectAttributes redirectAttr, HttpServletRequest req) {
 		if (authentication != null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 
+		if(userService.existsByUsername(userDto.getUsername())) {
+			redirectAttr.addFlashAttribute("error", "Username already taken.");
+			redirectAttr.addAttribute("userDto", userDto);
+			return "redirect:" + req.getHeader("Referer");
+		}
 		if (userService.existsByEmail(userDto.getEmail())) {
-			model.addAttribute("error", "Email is already in use.");
-			model.addAttribute("userDto", userDto);
-			return "auth/register";
+			redirectAttr.addFlashAttribute("error", "Email is already in use.");
+			redirectAttr.addAttribute("userDto", userDto);
+			return "redirect:" + req.getHeader("Referer");
 		}
 
 		userDto.setRole("user");
 		userService.save(User.builder()
-			.name(userDto.getName())
+			.username(userDto.getUsername())
 			.email(userDto.getEmail())
 			.password(encoder.encode(userDto.getPassword()))
 			.role("user")
@@ -65,6 +75,34 @@ public class AuthController {
 		redirectAttr.addFlashAttribute("success", "Registration successful. Please login.");
 		return "redirect:/login";
 	}
+	
+	@GetMapping("/auth/register/check-username")
+	public ResponseEntity<ApiResponse<Object>> checkUniqueUsername(@RequestParam String username) {
+	    if (username == null || username.trim().isEmpty()) {
+	        return ResponseEntity.badRequest()
+	                .body(new ApiResponse<>("error", "Username cannot be empty"));
+	    }
+	    if (userService.existsByUsernameIncludingDeleted(username)) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT)
+	                .body(new ApiResponse<>("error", "User already exists with this username: " + username));
+	    }
+	    return ResponseEntity.ok(new ApiResponse<>("success", "Username is available: " + username));
+	}
+
+	@GetMapping("/auth/register/check-email")
+	public ResponseEntity<ApiResponse<Object>> checkUniqueEmail(@RequestParam String email) {
+	    if (email == null || email.trim().isEmpty()) {
+	        return ResponseEntity.badRequest()
+	                .body(new ApiResponse<>("error", "Email cannot be empty"));
+	    }
+
+	    if (userService.existsByEmailIncludingDeleted(email)) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT)
+	                .body(new ApiResponse<>("error", "User already exists with this email: " + email));
+	    }
+	    return ResponseEntity.ok(new ApiResponse<>("success", "Email is available: " + email));
+	}
+
 
 
 }

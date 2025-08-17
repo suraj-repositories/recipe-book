@@ -24,6 +24,12 @@ public interface UserService {
 	List<UserDto> getThreeRandomUsersWithRecipes();
 	
 	boolean existsByEmail(String email);
+
+	boolean existsByUsername(String username);
+	
+	boolean existsByEmailIncludingDeleted(String email);
+	
+	boolean existsByUsernameIncludingDeleted(String username);
 	
 	boolean isAdmin(String userName);
 	
