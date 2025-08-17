@@ -1,5 +1,6 @@
 package com.oranbyte.recipebook.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,5 +20,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpec
 	long countByRecipeId(Long recipeId);
 	
 	Page<Comment> findByParentId(Long parentId, Pageable pageable);
+	
+	long countByRecipeUserIdAndCreatedAtAfter(Long userId, LocalDateTime dateTime);
 	
 }

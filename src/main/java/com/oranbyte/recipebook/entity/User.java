@@ -15,9 +15,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -82,37 +79,25 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RecipeReaction> reactions = new ArrayList<>();
 
-	@ManyToMany
-	@JoinTable(
-		name = "user_followers", 
-		joinColumns = @JoinColumn(name = "follower_id"), 
-		inverseJoinColumns = @JoinColumn(name = "following_id")
-	)
-	private Set<User> following = new HashSet<>();
+	@OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Follow> following = new HashSet<>();
 
-	@ManyToMany(mappedBy = "following")
-	private Set<User> followers = new HashSet<>();
+	@OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Follow> followers = new HashSet<>();
+
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
-	
-	public void follow(User user) {
-		this.following.add(user);
-		user.getFollowers().add(this);
+	public boolean isFollowing(User user) {
+	    return this.following.stream()
+	            .anyMatch(f -> f.getFollowing().equals(user));
 	}
 
-	public void unfollow(User user) {
-		this.following.remove(user);
-		user.getFollowers().remove(this);
-	}
-	
-	public boolean isFollowing(User user) {
-		return following.contains(user);
-	}
-	
 	public boolean isFollowedBy(User user) {
-        return followers.contains(user);
-    }
+	    return this.followers.stream()
+	            .anyMatch(f -> f.getFollower().equals(user));
+	}
+
 	
 }

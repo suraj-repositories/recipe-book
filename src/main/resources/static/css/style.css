@@ -2820,3 +2820,14 @@ section article.card img.card-img-top {
 	padding: 2px 10px;
 	max-height: 30px;
 }
+.user-dashboard .container .content{
+	min-height: 100dvh;
+}
+.user-dashboard.overflow-manager{
+	overflow: hidden;
+}
+
+.user-dashboard .sidebar{
+	overflow-y: auto;
+	margin-bottom: 200px;
+}

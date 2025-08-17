@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oranbyte.recipebook.entity.User;
+import com.oranbyte.recipebook.service.FollowService;
 import com.oranbyte.recipebook.service.UserService;
 
 @Controller
@@ -19,6 +20,9 @@ public class FollowController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private FollowService followService;
 	
 	@PostMapping("/{id}/follow")
 	@ResponseBody
@@ -39,10 +43,10 @@ public class FollowController {
 
 	        boolean isFollowing;
 	        if (currentUser.isFollowing(targetUser)) {
-	            currentUser.unfollow(targetUser);
+	            followService.unfollow(currentUser, targetUser);
 	            isFollowing = false;
 	        } else {
-	            currentUser.follow(targetUser);
+	            followService.follow(currentUser, targetUser);
 	            isFollowing = true;
 	        }
 

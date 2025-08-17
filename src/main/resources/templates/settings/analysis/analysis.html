@@ -3,7 +3,7 @@
 
 <th:block th:replace="~{/settings/partials/header :: header}"></th:block>
 
-<div class="content analysis">
+<div class="content analysis mb-4">
 	<h3>Analysis</h3>
 	<hr class="mt-0 mb-3">
 
@@ -53,8 +53,16 @@
 				</div>
 			</div>
 		</div>
+		<script id="public-report-chart-data" type="application/json">
+				{
+				  "weekly": [ [[${weeklyFollowing ?: 0}]], [[${weeklyFollowers ?: 0}]], [[${weeklyComments ?: 0}]] ],
+				  "monthly": [ [[${monthlyFollowing ?: 0}]], [[${monthlyFollowers ?: 0}]], [[${monthlyComments ?: 0}]] ],
+				  "yearly": [ [[${yearlyFollowing ?: 0}]], [[${yearlyFollowers ?: 0}]], [[${yearlyComments ?: 0}]]]
+				}
+		</script>
 
 		<!-- Chart 3 -->
+		<!--/*
 		<div class="col-12">
 			<div class="card shadow-sm border-0 mt-4">
 				<div class="card-header">
@@ -65,12 +73,11 @@
 				</div>
 			</div>
 		</div>
+		*/-->
 	</div>
 
-
+	<!--/*
 	<script>
-
-
 
 		var options = {
 			series: [{
@@ -104,10 +111,8 @@
 		var chart = new ApexCharts(document.querySelector("#chart3"), options);
 		chart.render();
 
-
-
-
 	</script>
+	*/-->
 
 </div>
 

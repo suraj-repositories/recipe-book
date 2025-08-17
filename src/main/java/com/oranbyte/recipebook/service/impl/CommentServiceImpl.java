@@ -1,5 +1,6 @@
 package com.oranbyte.recipebook.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,24 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public Comment getComment(Long commentId) {
-		// TODO Auto-generated method stub
 		return commentRepository.findById(commentId).orElse(null);
 	}
 
+	@Override
+	public long getWeeklyComments(Long userId) {
+		LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+		return commentRepository.countByRecipeUserIdAndCreatedAtAfter(userId, oneWeekAgo);
+	}
+
+	@Override
+	public long getMonthlyComments(Long userId) {
+		LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+		return commentRepository.countByRecipeUserIdAndCreatedAtAfter(userId, oneMonthAgo);
+	}
+
+	@Override
+	public long getYearlyComments(Long userId) {
+		LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
+		return commentRepository.countByRecipeUserIdAndCreatedAtAfter(userId, oneYearAgo);
+	}
 }
