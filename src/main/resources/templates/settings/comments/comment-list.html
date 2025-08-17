@@ -64,7 +64,7 @@
 							<!--/*
 							<button class="share"><i class="ti-comments"></i></button>
 							*/-->
-							<form th:action="@{/settings/comments/{id} (id=${comment.id})}" method="post" th:method="DELETE" >
+							<form th:action="@{/admin/settings/comments/{id} (id=${comment.id})}" method="post" th:method="DELETE" >
 								<button class="delete" type="submit"><i class="ti-trash"></i></button>
 							</form>
 						</div>

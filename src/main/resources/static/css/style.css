@@ -2025,7 +2025,8 @@ mark {
 }
 
 .user-dashboard .user-info .user-head-details .username {
-	font-size: 12px;
+	font-size: 16px;
+	font-weight: 600;
 }
 
 .user-dashboard .visit_button {
@@ -2796,4 +2797,14 @@ section article.card img.card-img-top {
 	height: 80px;
 	width: 140px;
 	object-fit: cover;
+}
+
+.no-copy-badge {
+	padding: 0px 6px;
+	background: #d0d0d09c;
+	border: 1px solid #d0d0d0ba;
+	border-radius: 7px;
+	color: #780000;
+	font-size: 14px;
+	user-select: none;
 }

@@ -1,4 +1,4 @@
-package com.oranbyte.recipebook.controller.settings;
+package com.oranbyte.recipebook.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +19,9 @@ import com.oranbyte.recipebook.service.RecipeReactionService;
 import com.oranbyte.recipebook.service.RecipeService;
 
 @Controller
-@RequestMapping("/settings/recipes")
+@RequestMapping("/admin/settings/recipes")
 public class RecipeSettingsController {
 	
-
 	@Autowired
 	private RecipeService recipeService;
 	

@@ -14,75 +14,69 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.oranbyte.recipebook.dto.UserDto;
+import com.oranbyte.recipebook.dto.CommentDto;
+import com.oranbyte.recipebook.entity.Comment;
 import com.oranbyte.recipebook.entity.User;
 import com.oranbyte.recipebook.exception.ResourceNotFoundException;
+import com.oranbyte.recipebook.service.CommentService;
 import com.oranbyte.recipebook.service.PaginationService;
-import com.oranbyte.recipebook.service.RecipeReactionService;
-import com.oranbyte.recipebook.service.RecipeService;
 import com.oranbyte.recipebook.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/settings/users")
-public class UserController {
-
+@RequestMapping("/settings/comments")
+public class CommentSettingsController__ {
+	
+	@Autowired
+	private CommentService commentService;
+	
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private PaginationService paginationService;
-	
-	@Autowired
-	private RecipeReactionService recipeReactionService;
-	
-	@Autowired
-	private RecipeService recipeService;
 
 	@GetMapping
-	public String index(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(required = false) String search, Model model) {
-
-		int pageIndex = Math.max(page - 1, 0);
-
-		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<UserDto> users = userService.searchUsers(search, pageable);
+	public String index(
+			Model model,
+			@RequestParam(defaultValue = "1") int page, 
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false) String search
+		) {
 		
-		users.getContent().forEach(user -> {
-	        user.setLikeCount(recipeReactionService.getLikeCountByUserId(user.getId()));
-	        user.setDislikeCount(recipeReactionService.getDislikeCountByUserId(user.getId()));
-	        user.setRecipeCount(recipeService.getRecipeCount(user.getId()));
-	    });
-
-		model.addAttribute("users", users.getContent());
-		model.addAllAttributes(paginationService.getPageMetadata(users, page));
+		int pageIndex = Math.max(page - 1, 0);
+		Pageable pageable = PageRequest.of(pageIndex, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<CommentDto> commentPage = commentService.searchComments(search, search, pageable);
+		
+		model.addAttribute("comments", commentPage.getContent());
+		model.addAllAttributes(paginationService.getPageMetadata(commentPage, page));
 		model.addAttribute("currentPageDisplay", page);
-
-		return "settings/users-list";
+		
+		return "settings/comments/comment-list";
 	}
 	
-	@DeleteMapping("/{userId}")
-	public String destroy(@PathVariable Long userId,
+	@DeleteMapping("/{commentId}")
+	public String destroy(@PathVariable Long commentId,
 	                      RedirectAttributes redirectAttr,
 	                      HttpServletRequest req) {
 	    try {
-	        User user = userService.getUser(userId);
-	        if (user == null) {
-	            throw new ResourceNotFoundException("User Not Found");
+	        Comment comment = commentService.getComment(commentId);
+	        if (comment == null) {
+	            throw new ResourceNotFoundException("Not Found");
 	        }
-	        
-	        User authUser = userService.getLoginUser();
-	        boolean isOwner = user.getId().equals(user.getId());
-	        boolean isAdmin = "admin".equals(authUser.getRole());
 
-	        if (!isAdmin) {
+	        User user = userService.getLoginUser();
+	        boolean isOwner = user.getId().equals(comment.getUser().getId());
+	        boolean isAdmin = "admin".equalsIgnoreCase(user.getRole());
+
+	        if (!isOwner && !isAdmin) {
 	            redirectAttr.addFlashAttribute("error", "Unauthorized!");
 	            return "redirect:" + req.getHeader("Referer");
 	        }
 
-	        userService.deleteUser(user.getId());
-	        redirectAttr.addFlashAttribute("success", "User Deleted Successfully!");
+	        commentService.deleteComment(comment.getId());
+	        redirectAttr.addFlashAttribute("success", "Comment Deleted Successfully!");
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -91,5 +85,5 @@ public class UserController {
 
 	    return "redirect:" + req.getHeader("Referer");
 	}
-
+	
 }

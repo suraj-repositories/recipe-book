@@ -1,4 +1,4 @@
-package com.oranbyte.recipebook.controller.settings;
+package com.oranbyte.recipebook.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ import com.oranbyte.recipebook.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/settings/comments")
+@RequestMapping("/admin/settings/comments")
 public class CommentSettingsController {
 	
 	@Autowired

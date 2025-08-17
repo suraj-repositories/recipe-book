@@ -10,7 +10,7 @@
 			</div>
 			<div class="user-head-details" th:if="${authUser != null}">
 				<h3 th:text="${authUser.name}">John doe</h3>
-				<div class="username" th:text="${authUser.email}">email@gmail.com</div>
+				<i class="username" th:text="${'@' + authUser.username}"></i>
 			</div>
 			<a class="visit_button" th:if="${authUser != null}"
 				th:href="@{/u/{username}(username=${authUser.username})}">Go to your personal profile</a>
