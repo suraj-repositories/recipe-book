@@ -11,4 +11,5 @@ import com.oranbyte.recipebook.entity.Ingredient;
 public interface IngredientRepository extends JpaRepository<Ingredient, Long>{
 	Optional<Ingredient> findByName(String name);
 	
+	
 }

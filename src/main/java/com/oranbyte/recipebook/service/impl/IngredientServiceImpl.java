@@ -1,12 +1,16 @@
 package com.oranbyte.recipebook.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.oranbyte.recipebook.dto.RecipeIngredientDto;
 import com.oranbyte.recipebook.entity.Ingredient;
 import com.oranbyte.recipebook.entity.Recipe;
 import com.oranbyte.recipebook.entity.RecipeIngredient;
 import com.oranbyte.recipebook.entity.Unit;
+import com.oranbyte.recipebook.mapper.RecipeIngredientMapper;
 import com.oranbyte.recipebook.repository.IngredientRepository;
 import com.oranbyte.recipebook.repository.RecipeIngredientRepository;
 import com.oranbyte.recipebook.repository.UnitRepository;
@@ -56,6 +60,11 @@ public class IngredientServiceImpl implements IngredientService{
     public void deleteByRecipe(Recipe recipe) {
     	recipeIngredientRepository.deleteByRecipe(recipe);
     }
+
+	@Override
+	public List<RecipeIngredientDto> getIngredients(Long recipeId) {
+		return recipeIngredientRepository.findByRecipeId(recipeId).stream().map(RecipeIngredientMapper::toDto).toList();
+	}
 	
 	
 

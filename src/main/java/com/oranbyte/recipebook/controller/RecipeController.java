@@ -171,6 +171,8 @@ public class RecipeController {
 		long likeCount = recipeReactionService.getLikeCount(recipe);
 		User recipeUser = recipe.getUser();
 		model.addAttribute("recipe", RecipeMapper.toDto(recipe));
+		model.addAttribute("ingredients", ingredientService.getIngredients(recipe.getId()));
+		
 		model.addAttribute("user", UserMapper.toDto(recipeUser));
 		model.addAttribute("comment_dto", CommentDto.builder().recipeId(recipe.getId()).build());
 		model.addAttribute("user_detail", userDetailService.getUserDetailDto(recipe.getUser().getId()));
